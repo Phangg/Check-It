@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct CustomDefaultButton: View {
+    // For managing button animation
+    @State private var isPressed = false
+    
     private let style: CustomDefaultButtonStyle
     private let text: String
     private let action: () -> Void
-    
-    // For managing button animation
-    @State private var isPressed = false
     
     init(
         style: CustomDefaultButtonStyle,
@@ -31,13 +31,13 @@ struct CustomDefaultButton: View {
             // BG
             Capsule()
                 .fill(style.backgroundColor)
-                .strokeBorder(.gray, lineWidth: ViewValues.Size.defaultLineWidth) // TODO: color 수정 필요
+                .strokeBorder(.gray, lineWidth: ViewValues.Size.lineWidth) // TODO: color 수정 필요
                 .overlay {
                     Capsule()
-                        .fill(isPressed ?  .black.opacity(ViewValues.Opacity.light) : .clear) // TODO: color 수정 필요
+                        .fill(isPressed ? .black.opacity(ViewValues.Opacity.light) : .clear) // TODO: color 수정 필요
                 }
                 .frame(height: ViewValues.Size.defaultButtonHeight)
-                .scaleEffect(isPressed ? ViewValues.Scale.pressedButton : ViewValues.Scale.default)
+                .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { _ in
@@ -56,7 +56,7 @@ struct CustomDefaultButton: View {
             Text(text)
                 .foregroundStyle(style.foregroundColor)
                 // TODO: - 버튼 폰트 설정 필요
-                .scaleEffect(isPressed ? ViewValues.Scale.pressedButton : ViewValues.Scale.default)
+                .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
         }
     }
 }

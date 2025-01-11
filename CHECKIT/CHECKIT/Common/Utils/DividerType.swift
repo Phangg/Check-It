@@ -8,6 +8,6 @@
 import Foundation
 
 enum DividerType {
-    case horizontal(height: CGFloat = ViewValues.Size.defaultLineWidth)
-    case vertival(width: CGFloat = ViewValues.Size.defaultLineWidth)
+    case horizontal(height: CGFloat = ViewValues.Size.lineWidth)
+    case vertival(width: CGFloat = ViewValues.Size.lineWidth)
 }
