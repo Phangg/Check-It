@@ -25,6 +25,9 @@ struct ViewValues {
         static let cellBox: CGFloat = 30
         static let cellBoxSmall: CGFloat = 20
         static let streakImageHeight: CGFloat = 22
+        static let settingItemImage: CGFloat = 25
+        static let settingItemTrailImage: CGFloat = 14
+        static let settingItemHeight: CGFloat = 40
     }
     
     //
