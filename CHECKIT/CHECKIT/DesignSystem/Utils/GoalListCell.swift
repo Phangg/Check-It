@@ -61,10 +61,7 @@ struct GoalListCell: View {
                 // Cell Box & Title
                 HStack(spacing: ViewValues.Padding.default) {
                     // Cell Box
-                    RoundedRectangle(cornerRadius: ViewValues.Radius.small)
-                        .fill(isCompleted ? .blue : .gray) // TODO: color 수정 필요
-                        .frame(width: ViewValues.Size.cellBox, height: ViewValues.Size.cellBox)
-                    
+                    GrowCell(backgroundColor: isCompleted ? .blue : .gray) // TODO: color 수정 필요
                     // Title
                     Text(title)
                         .lineLimit(2)
