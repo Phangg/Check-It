@@ -33,7 +33,7 @@ struct GoalListCell: View {
         ZStack(alignment: .center) {
             // BG
             RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                .fill(isCompleted ? .budWhite : .lightGray)
+                .fill(isCompleted ? .budWhite : .softGray)
                 .strokeBorder(isCompleted ? .cellLevel1 : .clear, lineWidth: ViewValues.Size.lineWidth)
                 .overlay {
                     RoundedRectangle(cornerRadius: ViewValues.Radius.default)
