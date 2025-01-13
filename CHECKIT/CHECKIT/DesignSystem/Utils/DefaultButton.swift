@@ -31,10 +31,10 @@ struct CustomDefaultButton: View {
             // BG
             Capsule()
                 .fill(style.backgroundColor)
-                .strokeBorder(.gray, lineWidth: ViewValues.Size.lineWidth) // TODO: color 수정 필요
+                .strokeBorder(.midGray, lineWidth: ViewValues.Size.lineWidth)
                 .overlay {
                     Capsule()
-                        .fill(isPressed ? .black.opacity(ViewValues.Opacity.light) : .clear) // TODO: color 수정 필요
+                        .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
                 }
                 .frame(height: ViewValues.Size.defaultButtonHeight)
                 .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)

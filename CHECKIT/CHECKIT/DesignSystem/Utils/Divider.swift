@@ -25,7 +25,7 @@ struct CustomDivider: View {
 
 #Preview {
     CustomDivider(
-        color: .gray, // TODO: color 수정 필요
+        color: .cellLevel1,
         type: .horizontal()
     )
     .padding(ViewValues.Padding.default)

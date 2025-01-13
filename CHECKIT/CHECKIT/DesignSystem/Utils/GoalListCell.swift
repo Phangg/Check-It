@@ -33,11 +33,11 @@ struct GoalListCell: View {
         ZStack(alignment: .center) {
             // BG
             RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                .fill(isCompleted ? .white : .gray.opacity(0.1)) // TODO: color 수정 필요
-                .strokeBorder(isCompleted ? .gray : .clear, lineWidth: ViewValues.Size.lineWidth)
+                .fill(isCompleted ? .budWhite : .lightGray)
+                .strokeBorder(isCompleted ? .cellLevel1 : .clear, lineWidth: ViewValues.Size.lineWidth)
                 .overlay {
                     RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                        .fill(isPressed ? .black.opacity(ViewValues.Opacity.light) : .clear) // TODO: color 수정 필요
+                        .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
                 }
                 .frame(height: ViewValues.Size.goalCellHeight)
                 .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
@@ -61,13 +61,13 @@ struct GoalListCell: View {
                 // Cell Box & Title
                 HStack(spacing: ViewValues.Padding.default) {
                     // Cell Box
-                    GrowCell(backgroundColor: isCompleted ? .blue : .gray) // TODO: color 수정 필요
+                    GrowCell(backgroundColor: isCompleted ? .blue : .cellLevel1) // TODO: color 수정 필요
                     // Title
                     Text(title)
                         .lineLimit(2)
-                        .foregroundStyle(isCompleted ? .gray : .black) // TODO: color 수정 필요
+                        .foregroundStyle(isCompleted ? .midGray : .budBlack)
                         // TODO: - 버튼 폰트 설정 필요
-                        .animatedStrikethrough(isActive: isCompleted, color: .gray) // TODO: color 수정 필요
+                        .animatedStrikethrough(isActive: isCompleted, color: .midGray)
 
                 }
                 //
@@ -81,7 +81,7 @@ struct GoalListCell: View {
                             .frame(height: ViewValues.Size.streakImageHeight)
                             .foregroundStyle(.red) // TODO: color 수정 필요
                         Text("\(goalStreakCount)")
-                            .foregroundStyle(.black) // TODO: color 수정 필요
+                            .foregroundStyle(.midGray)
                             .font(.footnote) // TODO: - 버튼 폰트 설정 필요
                     }
                     .transition(.opacity)

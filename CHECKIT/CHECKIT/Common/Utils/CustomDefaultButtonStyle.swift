@@ -15,7 +15,7 @@ enum CustomDefaultButtonStyle {
     var foregroundColor: Color {
         switch self {
         case .filled:
-                .white
+                .budWhite
         case .bordered:
                 .blue
         }
@@ -27,7 +27,7 @@ enum CustomDefaultButtonStyle {
         case .filled:
                 .blue
         case .bordered:
-                .white
+                .budWhite
         }
     }
 }

@@ -26,7 +26,7 @@ struct AddGoalButton: View {
                 .fill(.blue.opacity(0.1)) // TODO: color 수정 필요
                 .overlay {
                     RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                        .fill(isPressed ? .black.opacity(ViewValues.Opacity.light) : .clear) // TODO: color 수정 필요
+                        .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
                 }
                 .frame(height: ViewValues.Size.goalCellHeight)
                 .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
@@ -47,7 +47,7 @@ struct AddGoalButton: View {
             // Label
             Image(systemName: "plus")
                 .font(.title2)
-                .foregroundStyle(.gray) // TODO: color 수정 필요
+                .foregroundStyle(.midGray)
                 .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
         }
     }

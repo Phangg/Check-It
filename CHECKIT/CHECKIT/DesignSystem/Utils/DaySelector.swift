@@ -67,14 +67,14 @@ struct DayButton: View {
         } label: {
             Text(day.dayString)
                 .font(.system(size: 13)) // TODO: 폰트 설정 필요
-                .foregroundStyle(day.isSelected ? .white : .black) // TODO: color 수정 필요
+                .foregroundStyle(day.isSelected ? .budWhite : .budBlack)
                 .padding(.horizontal, ViewValues.Padding.medium)
                 .padding(.vertical, ViewValues.Padding.mid)
                 .background(
                     RoundedRectangle(cornerRadius: ViewValues.Radius.medium)
-                        .fill(day.isSelected ? .blue : .gray.opacity(0.1)) // TODO: color 수정 필요
-                        .strokeBorder(day.isSelected ? .clear : .gray.opacity(0.7),
-                                      lineWidth: ViewValues.Size.lineWidth) // TODO: color 수정 필요
+                        .fill(day.isSelected ? .blue : .lightGray) // TODO: color 수정 필요
+                        .strokeBorder(day.isSelected ? .clear : .midGray,
+                                      lineWidth: ViewValues.Size.lineWidth)
                 )
         }
         .buttonStyle(.plain)
