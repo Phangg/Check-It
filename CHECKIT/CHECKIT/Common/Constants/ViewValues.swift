@@ -10,11 +10,13 @@ import SwiftUI
 struct ViewValues {
     //
     struct Padding {
+        static let big: CGFloat = 50
         static let `default`: CGFloat = 20
         static let medium: CGFloat = 10
         static let mid: CGFloat = 6
         static let small: CGFloat = 4
         static let tiny: CGFloat = 2
+        static let zero: CGFloat = 0
     }
     
     //
@@ -25,9 +27,13 @@ struct ViewValues {
         static let cellBox: CGFloat = 30
         static let cellBoxSmall: CGFloat = 20
         static let streakImageHeight: CGFloat = 22
+        static let currentIndicatorWidth: CGFloat = 50
+        static let indicator: CGFloat = 10
         static let settingItemImage: CGFloat = 25
         static let settingItemTrailImage: CGFloat = 14
         static let settingItemHeight: CGFloat = 40
+        static let onboardingTopToobarHeight: CGFloat = 30
+        static let onboardingContentWidth: CGFloat = 300
     }
     
     //
@@ -57,5 +63,6 @@ struct ViewValues {
         static let level2: CGFloat = 0.25
         static let level3: CGFloat = 0.5
         static let level4: CGFloat = 0.75
+        static let level5: CGFloat = 1
     }
 }
