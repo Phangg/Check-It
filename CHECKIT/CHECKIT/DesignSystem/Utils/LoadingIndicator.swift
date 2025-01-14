@@ -8,37 +8,37 @@
 import SwiftUI
 
 struct LoadingIndicator: View {
-    @Binding private var currentStep: Int
+    @Binding private var currentPage: OnboardingTab
     
     private let color: Color
     
     init(
-        currentStep: Binding<Int>,
+        currentPage: Binding<OnboardingTab>,
         color: Color
     ) {
-        self._currentStep = currentStep
+        self._currentPage = currentPage
         self.color = color
     }
     
     var body: some View {
         HStack(spacing: ViewValues.Padding.mid) {
-            ForEach(0..<3, id: \.self) { step in
-                if step == currentStep {
-                    // 완료된 단계
-                    Capsule()
-                        .fill(color)
-                        .frame(width: 50, height: 10)
-                } else {
-                    // 남은 단계
-                    Circle()
-                        .fill(color.opacity(ViewValues.Opacity.level3))
-                        .frame(width: 10, height: 10)
-                }
+            ForEach(OnboardingTab.allCases, id: \.self) { page in
+                Capsule()
+                    .fill(
+                        color.opacity(
+                            page == currentPage ? ViewValues.Opacity.level5 : ViewValues.Opacity.level3
+                        )
+                    )
+                    .frame(
+                        width: page == currentPage ? ViewValues.Size.currentIndicatorWidth : ViewValues.Size.indicator,
+                        height: ViewValues.Size.indicator
+                    )
+                    .animation(.easeInOut(duration: ViewValues.Duration.regular), value: currentPage)
             }
         }
     }
 }
 
 #Preview {
-    LoadingIndicator(currentStep: .constant(0), color: .blue)
+    LoadingIndicator(currentPage: .constant(.page1), color: .blue)
 }
