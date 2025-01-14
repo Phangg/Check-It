@@ -8,7 +8,22 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State private var currentTab: OnboardingTab = .page1
+    @StateObject var container: MVIContainer<OnboardingIntent, OnboardingModelState>
+    private var intent: OnboardingIntent { container.intent }
+    private var state: OnboardingModelState { container.model }
+        
+    init() {
+        let model = OnboardingModelImp()
+        let intent = OnboardingIntentImp(
+            model: model
+        )
+        let container = MVIContainer(
+            intent: intent as OnboardingIntent,
+            model: model as OnboardingModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: ViewValues.Padding.default) {
@@ -16,21 +31,18 @@ struct OnboardingView: View {
             OnboardingTopToobar()
                 .padding(ViewValues.Padding.default)
             //
-            OnboardingPage(currentTab: $currentTab)
+            OnboardingPage(
+                currentTab: Binding(
+                    get: { state.currentTab },
+                    set: { intent.updateTab($0) }
+                )
+            )
             //
             CustomDefaultButton(
                 style: .filled,
-                text: currentTab.nextButtonText
+                text: state.currentTab.nextButtonText
             ) {
-                switch currentTab {
-                case .page1:
-                    currentTab = .page2
-                case .page2:
-                    currentTab = .page3
-                case .page3:
-                    break
-                    // TODO: 온보딩 완료하고 MainView 로 이동
-                }
+                intent.showNextPage(current: state.currentTab)
             }
             .padding(ViewValues.Padding.default)
         }
@@ -39,13 +51,19 @@ struct OnboardingView: View {
     @ViewBuilder
     fileprivate func OnboardingTopToobar() -> some View {
         HStack(alignment: .center) {
-            //
-            LoadingIndicator(currentPage: $currentTab, color: .blue) // TODO: color 수정 예정
+            // OnboardingPage 인디케이터
+            LoadingIndicator(
+                currentPage: Binding(
+                    get: { state.currentTab },
+                    set: { intent.updateTab($0) }
+                ),
+                color: .blue // TODO: color 수정 예정
+            )
             //
             Spacer()
             // Skip 버튼
             Button {
-                //
+                intent.completeOnboarding()
             } label: {
                 HStack(alignment: .center, spacing: ViewValues.Padding.mid) {
                     Text("Skip") // TODO: font 수정 예정
