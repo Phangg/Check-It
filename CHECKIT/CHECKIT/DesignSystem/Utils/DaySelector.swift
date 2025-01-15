@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct DaySelector: View {
-    @State private var days: [Day] = [
-        Day(dayString: "매일", isSelected: true),
-        Day(dayString: "월", isSelected: false),
-        Day(dayString: "화", isSelected: false),
-        Day(dayString: "수", isSelected: false),
-        Day(dayString: "목", isSelected: false),
-        Day(dayString: "금", isSelected: false),
-        Day(dayString: "토", isSelected: false),
-        Day(dayString: "일", isSelected: false)
+    @State private var days: [DayInSelector] = [
+        .init(day: .allDay, isSelected: true),
+        .init(day: .monday, isSelected: false),
+        .init(day: .tuesday, isSelected: false),
+        .init(day: .wednesday, isSelected: false),
+        .init(day: .thursday, isSelected: false),
+        .init(day: .friday, isSelected: false),
+        .init(day: .saturday, isSelected: false),
+        .init(day: .sunday, isSelected: false)
     ]
     
     var body: some View {
@@ -35,14 +35,14 @@ struct DaySelector: View {
         .scrollIndicators(.hidden)
     }
     
-    private func updateDailySelection(for newDays: [Day]) {
-        let weekDays = newDays.filter { $0.dayString != "매일" }
+    private func updateDailySelection(for newDays: [DayInSelector]) {
+        let weekDays = newDays.filter { $0.day != .allDay }
         if weekDays.allSatisfy({ $0.isSelected }) {
             days = days.map {
-                if $0.dayString == "매일" {
-                    Day(dayString: $0.dayString, isSelected: true)
+                if $0.day == .allDay {
+                    DayInSelector(day: $0.day, isSelected: true)
                 } else {
-                    Day(dayString: $0.dayString, isSelected: false)
+                    DayInSelector(day: $0.day, isSelected: false)
                 }
             }
         }
@@ -50,12 +50,12 @@ struct DaySelector: View {
 }
 
 struct DayButton: View {
-    @Binding private var day: Day
-    @Binding private var days: [Day]
+    @Binding private var day: DayInSelector
+    @Binding private var days: [DayInSelector]
     
     init(
-        day: Binding<Day>,
-        days: Binding<[Day]>
+        day: Binding<DayInSelector>,
+        days: Binding<[DayInSelector]>
     ) {
         self._day = day
         self._days = days
@@ -65,7 +65,7 @@ struct DayButton: View {
         Button {
             handleSelection()
         } label: {
-            Text(day.dayString)
+            Text(day.day.rawValue)
                 .font(.system(size: 13)) // TODO: 폰트 설정 필요
                 .foregroundStyle(day.isSelected ? .budWhite : .budBlack)
                 .padding(.horizontal, ViewValues.Padding.medium)
@@ -81,7 +81,7 @@ struct DayButton: View {
     }
     
     private func handleSelection() {
-        if day.dayString == "매일" {
+        if day.day == .allDay {
             let shouldSelect = !day.isSelected
             days.indices.forEach { index in
                 days[index].isSelected = shouldSelect && index == 0
