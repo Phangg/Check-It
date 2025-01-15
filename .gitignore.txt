@@ -26,7 +26,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
@@ -80,6 +79,9 @@ playground.xcworkspace
 ### Projects ###
 *.xcodeproj
 *.xcworkspace
+
+### Firebase
+GoogleService-Info.plist
 
 ### Signing
 
