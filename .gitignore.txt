@@ -79,6 +79,7 @@ playground.xcworkspace
 ### Projects ###
 *.xcodeproj
 *.xcworkspace
+*.xcuserstate
 
 ### Firebase
 GoogleService-Info.plist
