@@ -10,6 +10,7 @@ import SwiftUI
 struct ViewValues {
     //
     struct Padding {
+        static let huge: CGFloat = 100
         static let big: CGFloat = 50
         static let `default`: CGFloat = 20
         static let medium: CGFloat = 10
@@ -34,6 +35,9 @@ struct ViewValues {
         static let settingItemHeight: CGFloat = 40
         static let onboardingTopToobarHeight: CGFloat = 30
         static let onboardingContentWidth: CGFloat = 300
+        static let loginButtonWidth: CGFloat = 300
+        static let loginButtonHeight: CGFloat = 50
+        static let loginLogoSize: CGFloat = 20
     }
     
     //
