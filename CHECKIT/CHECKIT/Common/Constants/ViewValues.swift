@@ -12,6 +12,7 @@ struct ViewValues {
     struct Padding {
         static let huge: CGFloat = 100
         static let big: CGFloat = 50
+        static let large: CGFloat = 30
         static let `default`: CGFloat = 20
         static let medium: CGFloat = 10
         static let mid: CGFloat = 6
@@ -27,13 +28,13 @@ struct ViewValues {
         static let lineWidth: CGFloat = 0.35
         static let cellBox: CGFloat = 30
         static let cellBoxSmall: CGFloat = 20
-        static let streakImageHeight: CGFloat = 22
+        static let streakImageHeight: CGFloat = 20
         static let currentIndicatorWidth: CGFloat = 50
         static let indicator: CGFloat = 10
         static let settingItemImage: CGFloat = 25
         static let settingItemTrailImage: CGFloat = 14
         static let settingItemHeight: CGFloat = 40
-        static let onboardingTopToobarHeight: CGFloat = 30
+        static let onboardingTopToobarHeight: CGFloat = 40
         static let onboardingContentWidth: CGFloat = 300
         static let loginButtonWidth: CGFloat = 300
         static let loginButtonHeight: CGFloat = 50

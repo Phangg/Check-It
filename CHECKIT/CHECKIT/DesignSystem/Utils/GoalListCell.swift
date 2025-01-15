@@ -33,7 +33,7 @@ struct GoalListCell: View {
         ZStack(alignment: .center) {
             // BG
             RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                .fill(isCompleted ? .budWhite : .softGray)
+                .fill(isCompleted ? .budWhite : .neutralGray)
                 .strokeBorder(isCompleted ? .cellLevel1 : .clear, lineWidth: ViewValues.Size.lineWidth)
                 .overlay {
                     RoundedRectangle(cornerRadius: ViewValues.Radius.default)
@@ -89,7 +89,7 @@ struct GoalListCell: View {
                 }
             }
             .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
-            .padding(ViewValues.Padding.default)
+            .padding(.horizontal, ViewValues.Padding.default)
         }
     }
 }

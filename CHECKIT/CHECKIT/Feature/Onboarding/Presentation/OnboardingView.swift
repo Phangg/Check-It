@@ -29,7 +29,7 @@ struct OnboardingView: View {
         VStack(alignment: .leading, spacing: ViewValues.Padding.default) {
             //
             OnboardingTopToobar()
-                .padding(ViewValues.Padding.default)
+                .padding(.horizontal, ViewValues.Padding.default)
             //
             OnboardingPage(
                 currentTab: Binding(
@@ -37,6 +37,7 @@ struct OnboardingView: View {
                     set: { intent.updateTab($0) }
                 )
             )
+            .padding(.vertical, ViewValues.Padding.medium)
             //
             CustomDefaultButton(
                 style: .filled,
@@ -44,7 +45,8 @@ struct OnboardingView: View {
             ) {
                 intent.showNextPage(current: state.currentTab)
             }
-            .padding(ViewValues.Padding.default)
+            .padding(.horizontal, ViewValues.Padding.large)
+            .padding(.vertical, ViewValues.Padding.default)
         }
     }
     
