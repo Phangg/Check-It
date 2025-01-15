@@ -92,11 +92,12 @@
 				};
 			};
 			buildConfigurationList = 090AFB602D30F5CF009DE839 /* Build configuration list for PBXProject "CHECKIT" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 090AFB5C2D30F5CF009DE839;
 			minimizedProjectReferenceProxies = 1;
