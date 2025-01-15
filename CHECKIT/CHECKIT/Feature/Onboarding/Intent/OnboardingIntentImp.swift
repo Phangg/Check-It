@@ -22,6 +22,9 @@ final class OnboardingIntentImp {
 // MARK: - Intent
 extension OnboardingIntentImp: OnboardingIntent {
     func completeOnboarding() {
+        // TODO: 온보딩 완료 & 스킵 시, 자동로그인 토큰 확인
+        /// 로그인 되어있으면, onboardingUseCase.completeOnboarding()
+        /// 로그인 안되어있으면, LoginView 로 이동
         onboardingUseCase.completeOnboarding()
     }
     

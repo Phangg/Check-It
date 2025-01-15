@@ -9,26 +9,27 @@ import SwiftUI
 
 @main
 struct CHECKITApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    private var appDelegate
+
+    @AppStorage(AppStorageKeys.isFirstOnboarding)
+    private var isFirstOnboarding: Bool = true
     
-    @AppStorage(AppStorageKeys.isFirstOnboarding) private var isFirstOnboarding: Bool = true
-    
-    @State private var isNotLogin: Bool = true // TODO: 로그인 정보 확인 여부 로컬 데이터로 수정 예정
+    @State private var isNotLogin: Bool = true // TODO: 로그인 정보 토큰 확인 키체인으로 수정 예정
     
     var body: some Scene {
         WindowGroup {
             if isFirstOnboarding {
                 // 앱 최초 실행 시, 온보딩화면을 띄우기
                 OnboardingView()
-            } else {
-                // 메인 화면
-                MainView()
-                    // TODO: 추후에 OnboardingView 의 시트로 이동 예정
-                    // TODO: 온보딩 완료, 스킵 시 -> 로그인 안되어있으면 LoginView 보이도록 하기
+                    // TODO: 추후 키체인 코드, 로그인 코드 작성 시 다시 사용 예정
 //                    .sheet(isPresented: $isNotLogin) {
 //                        Loginview()
 //                            .presentationDragIndicator(.visible)
 //                    }
+            } else {
+                // 메인 화면
+                MainView()
             }
         }
     }
