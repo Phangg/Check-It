@@ -10,21 +10,29 @@ import SwiftUI
 struct GrowCell: View {
     private let day: String
     private let backgroundColor: Color
+    private let type: GrowCellType
     
     init(
         day: Int? = nil,
+        type: GrowCellType = .default,
         backgroundColor: Color
     ) {
         self.day = if day == nil { "" } else { String(day!) }
+        self.type = type
         self.backgroundColor = backgroundColor
     }
     
     var body: some View {
         ZStack(alignment: .center) {
             // BG
-            RoundedRectangle(cornerRadius: ViewValues.Radius.small)
-                .fill(backgroundColor)
-                .frame(width: ViewValues.Size.cellBox, height: ViewValues.Size.cellBox)
+            RoundedRectangle(
+                cornerRadius: type == .default ? ViewValues.Radius.small : ViewValues.Radius.tiny
+            )
+            .fill(backgroundColor)
+            .frame(
+                width: type == .default ? ViewValues.Size.cellBox : ViewValues.Size.cellBoxSmall,
+                height: type == .default ? ViewValues.Size.cellBox : ViewValues.Size.cellBoxSmall
+            )
             // Label
             Text(day)  // TODO: 폰트 설정 필요
                 .foregroundStyle(.budWhite)
