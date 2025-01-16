@@ -30,67 +30,56 @@ struct GoalListCell: View {
     }
     
     var body: some View {
-        ZStack(alignment: .center) {
-            // BG
-            RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                .fill(isCompleted ? .budWhite : .neutralGray)
-                .strokeBorder(isCompleted ? .cellLevel1 : .clear, lineWidth: ViewValues.Size.lineWidth)
-                .overlay {
-                    RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                        .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
-                }
-                .frame(height: ViewValues.Size.goalCellHeight)
-                .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { _ in
-                            withAnimation(.easeInOut(duration: ViewValues.Duration.regular)) {
-                                isPressed = true
-                            }
-                        }
-                        .onEnded { _ in
-                            withAnimation(.easeInOut(duration: ViewValues.Duration.regular)) {
-                                isPressed = false
-                                isCompleted.toggle()
-                                action()
-                            }
-                        }
-                )
-            // Contents
-            HStack(alignment: .center) {
-                // Cell Box & Title
-                HStack(spacing: ViewValues.Padding.default) {
-                    // Cell Box
-                    GrowCell(backgroundColor: isCompleted ? .blue : .cellLevel1) // TODO: color 수정 필요
-                    // Title
-                    Text(title)
-                        .lineLimit(2)
-                        .foregroundStyle(isCompleted ? .midGray : .budBlack)
-                        // TODO: - 버튼 폰트 설정 필요
-                        .animatedStrikethrough(isActive: isCompleted, color: .midGray)
-
-                }
-                //
-                Spacer(minLength: ViewValues.Padding.default)
-                // Streak
-                if goalStreakCount > 0 {
-                    VStack(alignment: .center, spacing: ViewValues.Padding.tiny) {
-                        Image(systemName: "flame.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: ViewValues.Size.streakImageHeight)
-                            .foregroundStyle(.red) // TODO: color 수정 필요
-                        Text("\(goalStreakCount)")
-                            .foregroundStyle(.midGray)
-                            .font(.footnote) // TODO: - 버튼 폰트 설정 필요
+        Button {
+            isCompleted.toggle()
+            action()
+        } label: {
+            ZStack(alignment: .center) {
+                // BG
+                RoundedRectangle(cornerRadius: ViewValues.Radius.default)
+                    .fill(isCompleted ? .budWhite : .neutralGray)
+                    .strokeBorder(isCompleted ? .cellLevel1 : .clear, lineWidth: ViewValues.Size.lineWidth)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: ViewValues.Radius.default)
+                            .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
                     }
-                    .transition(.opacity)
-                    .animation(.easeInOut(duration: ViewValues.Duration.long), value: goalStreakCount)
+                    .frame(height: ViewValues.Size.goalCellHeight)
+                // Contents
+                HStack(alignment: .center) {
+                    // Cell Box & Title
+                    HStack(spacing: ViewValues.Padding.default) {
+                        // Cell Box
+                        GrowCell(backgroundColor: isCompleted ? .blue : .cellLevel1) // TODO: color 수정 필요
+                        // Title
+                        Text(title)
+                            .lineLimit(2)
+                            .foregroundStyle(isCompleted ? .midGray : .budBlack)
+                        // TODO: - 버튼 폰트 설정 필요
+                            .animatedStrikethrough(isActive: isCompleted, color: .midGray)
+                        
+                    }
+                    //
+                    Spacer(minLength: ViewValues.Padding.default)
+                    // Streak
+                    if goalStreakCount > 0 {
+                        VStack(alignment: .center, spacing: ViewValues.Padding.tiny) {
+                            Image(systemName: "flame.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: ViewValues.Size.streakImageHeight)
+                                .foregroundStyle(.red) // TODO: color 수정 필요
+                            Text("\(goalStreakCount)")
+                                .foregroundStyle(.midGray)
+                                .font(.footnote) // TODO: - 버튼 폰트 설정 필요
+                        }
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: ViewValues.Duration.long), value: goalStreakCount)
+                    }
                 }
+                .padding(.horizontal, ViewValues.Padding.default)
             }
-            .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
-            .padding(.horizontal, ViewValues.Padding.default)
         }
+        .buttonStyle(PressButtonStyle(isPressed: $isPressed))
     }
 }
 

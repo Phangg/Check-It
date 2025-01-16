@@ -27,37 +27,25 @@ struct CustomDefaultButton: View {
     }
     
     var body: some View {
-        ZStack(alignment: .center) {
-            // BG
-            Capsule()
-                .fill(style.backgroundColor)
-                .strokeBorder(.midGray, lineWidth: ViewValues.Size.lineWidth)
-                .overlay {
-                    Capsule()
-                        .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
-                }
-                .frame(height: ViewValues.Size.defaultButtonHeight)
-                .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { _ in
-                            withAnimation(.easeInOut(duration: ViewValues.Duration.regular)) {
-                                isPressed = true
-                            }
-                        }
-                        .onEnded { _ in
-                            withAnimation(.easeInOut(duration: ViewValues.Duration.regular)) {
-                                isPressed = false
-                                action()
-                            }
-                        }
-                )
-            // Label
-            Text(text)
-                .foregroundStyle(style.foregroundColor)
-                // TODO: - 버튼 폰트 설정 필요
-                .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
+        Button {
+            action()
+        } label: {
+            ZStack(alignment: .center) {
+                // BG
+                Capsule()
+                    .fill(style.backgroundColor)
+                    .strokeBorder(.midGray, lineWidth: ViewValues.Size.lineWidth)
+                    .overlay {
+                        Capsule()
+                            .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)
+                    }
+                    .frame(height: ViewValues.Size.defaultButtonHeight)
+                // Label
+                Text(text)
+                    .foregroundStyle(style.foregroundColor) // TODO: font 설정 필요
+            }
         }
+        .buttonStyle(PressButtonStyle(isPressed: $isPressed))
     }
 }
 
