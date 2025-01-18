@@ -9,15 +9,18 @@ import SwiftUI
 
 struct GrowCell: View {
     private let day: String
+    private let month: String
     private let backgroundColor: Color
     private let type: GrowCellType
     
     init(
         day: Int? = nil,
+        month: Month? = nil,
         type: GrowCellType = .default,
         backgroundColor: Color
     ) {
         self.day = if day == nil { "" } else { String(day!) }
+        self.month = if month == nil { "" } else { month!.rawValue }
         self.type = type
         self.backgroundColor = backgroundColor
     }
@@ -34,8 +37,10 @@ struct GrowCell: View {
                 height: type == .default ? ViewValues.Size.cellBox : ViewValues.Size.cellBoxSmall
             )
             // Label
-            Text(day)  // TODO: 폰트 설정 필요
-                .foregroundStyle(.budWhite)
+            Text(day != "" ? day : month)
+                .font(.system(size: day != "" ? 15 : 13)) // TODO: font 수정 예정
+                .fontWeight(.regular)
+                .foregroundStyle(day != "" ? .budWhite : .budBlack)
         }
     }
 }
