@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     @State private var sampleCalendarData: [DayData] = SampleData.days
     @State private var sampleGoalData: [Goal] = SampleData.goals
+    @State private var showSettingSheet: Bool = false
     
     private let calendarRows = Array(
         repeating: GridItem(.flexible(), spacing: ViewValues.Padding.small),
@@ -33,9 +34,14 @@ struct MainView: View {
                 GoalList()
             }
             .frame(maxHeight: .infinity)
+            .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { MainViewToolbarContent() }
-            .ignoresSafeArea(edges: .bottom)
+            // Setting Sheet
+            .sheet(isPresented: $showSettingSheet) {
+                SettingView()
+                    .interactiveDismissDisabled()
+            }
         }
     }
     
@@ -50,6 +56,7 @@ struct MainView: View {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
                 // TODO: 설정 시트 열기
+                showSettingSheet = true
             } label: {
                 Image(systemName: "gearshape.fill")
             }

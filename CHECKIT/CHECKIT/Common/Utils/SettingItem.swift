@@ -21,7 +21,7 @@ enum SettingItem: String, CaseIterable {
     var subtitle: String? {
         switch self {
         case .notification:
-            "목표마다 설정된 시간에 알림을 받을 수 있어요"
+            "설정된 시간에 알림을 받을 수 있어요"
         case .appMainColor:
             "앱의 메인 색상을 변경할 수 있어요"
         case .displayMode:
@@ -55,6 +55,23 @@ enum SettingItem: String, CaseIterable {
             "figure.walk"
         case .cancelAccount:
             "trash.fill"
+        }
+    }
+    
+    var type: SettingItemType {
+        switch self {
+        case .notification:
+            .toggle
+        case .appMainColor, .displayMode:
+            .sheet
+        case .privacyPolicy, .termsAndConditions:
+            .web
+        case .appEvaluation:
+            .store
+        case .request:
+            .mail
+        case .logout, .cancelAccount:
+            .none
         }
     }
 }

@@ -7,4 +7,5 @@
 
 enum AppLocalized {
     static let AppName = "Check It"
+    static let SettingSheetTitle = "Setting"
 }

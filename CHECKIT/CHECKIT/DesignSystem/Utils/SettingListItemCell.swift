@@ -21,7 +21,7 @@ struct SettingListItemCell: View {
     }
     
     var body: some View {
-        HStack(alignment: .center, spacing: ViewValues.Padding.medium) {
+        HStack(alignment: .center, spacing: ViewValues.Padding.default) {
             // image
             Image(systemName: item.image)
                 .resizable()
@@ -41,24 +41,22 @@ struct SettingListItemCell: View {
                         .foregroundStyle(.midGray)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             //
             Spacer(minLength: ViewValues.Padding.medium)
             // trail icon
-            switch item {
-            case .notification:
+            switch item.type {
+            case .toggle:
                 Toggle("", isOn: $isOnNotification)
+                    .labelsHidden()
                     .tint(.blue) // TODO: color 수정 예정
-            case .appMainColor, .displayMode, .privacyPolicy, .termsAndConditions, .appEvaluation, .request:
-                Button {
-                    //
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: ViewValues.Size.settingItemTrailImage, height: ViewValues.Size.settingItemTrailImage)
-                        .foregroundStyle(.midGray)
-                }
-            case .logout, .cancelAccount:
+            case .sheet, .web, .store, .mail:
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: ViewValues.Size.settingItemTrailImage, height: ViewValues.Size.settingItemTrailImage)
+                    .foregroundStyle(.midGray)
+            case .none:
                 EmptyView()
             }
         }
