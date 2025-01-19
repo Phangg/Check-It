@@ -35,6 +35,7 @@ struct MainView: View {
             .frame(maxHeight: .infinity)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { MainViewToolbarContent() }
+            .ignoresSafeArea(edges: .bottom)
         }
     }
     
@@ -59,7 +60,6 @@ struct MainView: View {
     @ViewBuilder
     fileprivate func GoalCalendar() -> some View {
         ScrollViewReader { proxy in
-            
             ScrollView(.horizontal) {
                 LazyHGrid(
                     rows: calendarRows,
@@ -74,7 +74,8 @@ struct MainView: View {
                     //
                     ForEach(sampleCalendarData.indices, id: \.self) { index in
                         let day = sampleCalendarData[index]
-                        if Date.getWeekday(for: day.date) == .monday { // 월요일은 Month 표시 or 빈 공간 추가
+                        if Date.getWeekday(for: day.date) == .monday {
+                            // 월요일은 Month 표시 or 빈 공간 추가
                             GrowCell(
                                 month: Date.checkFirstWeekMonth(for: day.date),
                                 backgroundColor: .clear
@@ -82,6 +83,7 @@ struct MainView: View {
                             GrowCell(day: day.dayOfMonth,
                                      backgroundColor: day.completionLevel.color)
                         } else {
+                            // 기본
                             GrowCell(day: day.dayOfMonth,
                                      backgroundColor: day.completionLevel.color)
                         }
@@ -100,7 +102,7 @@ struct MainView: View {
     
     @ViewBuilder
     fileprivate func GoalList() -> some View {
-        ScrollView(.vertical) {
+        CustomHorizontalScrollView {
             LazyVStack(alignment: .center, spacing: ViewValues.Padding.default) {
                 ForEach($sampleGoalData.indices, id: \.self) { index in
                     GoalListCell(
@@ -119,7 +121,5 @@ struct MainView: View {
                 }
             }
         }
-        .frame(maxHeight: .infinity)
-        .scrollIndicators(.visible)
     }
 }

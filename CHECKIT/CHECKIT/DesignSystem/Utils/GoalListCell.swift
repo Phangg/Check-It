@@ -50,9 +50,13 @@ struct GoalListCell: View {
                     HStack(spacing: ViewValues.Padding.default) {
                         // Cell Box
                         GrowCell(backgroundColor: isCompleted ? .blue : .cellLevel1) // TODO: color 수정 필요
+                            .overlay(alignment: .center) {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(isCompleted ? .budWhite : .clear)
+                            }
                         // Title
                         Text(title)
-                            .lineLimit(2)
+                            .lineLimit(1)
                             .foregroundStyle(isCompleted ? .midGray : .budBlack)
                         // TODO: - 버튼 폰트 설정 필요
                             .animatedStrikethrough(isActive: isCompleted, color: .midGray)
