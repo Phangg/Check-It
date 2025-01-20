@@ -11,6 +11,14 @@ struct DateFormat {
     private static let yearDotMonthDotDay = "yyyy.MM.dd"
     private static let monthInEnglishFormat = "MMM"
     
+    //
+    static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+    
+    // Date -> "yyyy.MM.dd"
     static func dateToYearDotMonthDotDay(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
@@ -18,6 +26,7 @@ struct DateFormat {
         return dateFormatter.string(from: date)
     }
     
+    // Date -> "MMM" (en)
     static func dateToMonth(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US")

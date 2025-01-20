@@ -13,7 +13,7 @@ struct SettingView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: ViewValues.Padding.zero) {
                 //
                 List {
                     // Section
