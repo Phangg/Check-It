@@ -8,44 +8,24 @@
 import SwiftUI
 
 struct DaySelector: View {
-    @State private var days: [DayInSelector] = [
-        .init(day: .allDay, isSelected: true),
-        .init(day: .monday, isSelected: false),
-        .init(day: .tuesday, isSelected: false),
-        .init(day: .wednesday, isSelected: false),
-        .init(day: .thursday, isSelected: false),
-        .init(day: .friday, isSelected: false),
-        .init(day: .saturday, isSelected: false),
-        .init(day: .sunday, isSelected: false)
-    ]
+    @Binding private var selectedDays: [DayInSelector]
+    
+    init(
+        selectedDays: Binding<[DayInSelector]>
+    ) {
+        self._selectedDays = selectedDays
+    }
     
     var body: some View {
         ScrollView(.horizontal) {
             HStack(alignment: .center, spacing: ViewValues.Padding.medium) {
                 //
-                ForEach($days, id: \.self) { $day in
-                    DayButton(day: $day, days: $days)
+                ForEach($selectedDays, id: \.self) { $day in
+                    DayButton(day: $day, days: $selectedDays)
                 }
-            }
-            .padding(.leading, ViewValues.Padding.default)
-            .onChange(of: days) { _, newDays in
-                updateDailySelection(for: newDays)
             }
         }
         .scrollIndicators(.hidden)
-    }
-    
-    private func updateDailySelection(for newDays: [DayInSelector]) {
-        let weekDays = newDays.filter { $0.day != .allDay }
-        if weekDays.allSatisfy({ $0.isSelected }) {
-            days = days.map {
-                if $0.day == .allDay {
-                    DayInSelector(day: $0.day, isSelected: true)
-                } else {
-                    DayInSelector(day: $0.day, isSelected: false)
-                }
-            }
-        }
     }
 }
 
@@ -84,15 +64,27 @@ struct DayButton: View {
         if day.day == .allDay {
             let shouldSelect = !day.isSelected
             days.indices.forEach { index in
-                days[index].isSelected = shouldSelect && index == 0
+                days[index].isSelected = shouldSelect
             }
         } else {
             day.isSelected.toggle()
-            days[0].isSelected = false
+            let allSelected = days.dropFirst().allSatisfy { $0.isSelected }
+            days[0].isSelected = allSelected
         }
     }
 }
 
 #Preview {
-    DaySelector()
+    DaySelector(
+        selectedDays: .constant(
+            [.init(day: .allDay, isSelected: true),
+             .init(day: .monday, isSelected: true),
+             .init(day: .tuesday, isSelected: true),
+             .init(day: .wednesday, isSelected: true),
+             .init(day: .thursday, isSelected: true),
+             .init(day: .friday, isSelected: true),
+             .init(day: .saturday, isSelected: true),
+             .init(day: .sunday, isSelected: true)]
+        )
+    )
 }
