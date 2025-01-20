@@ -8,10 +8,16 @@
 import SwiftUI
 
 extension View {
+    //
     func animatedStrikethrough(
         isActive: Bool,
         color: Color
     ) -> some View {
         modifier(AnimatedStrikethrough(isActive: isActive, color: color))
+    }
+    
+    //
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
