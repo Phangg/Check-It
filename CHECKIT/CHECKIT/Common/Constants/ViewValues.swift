@@ -39,6 +39,9 @@ struct ViewValues {
         static let loginButtonWidth: CGFloat = 300
         static let loginButtonHeight: CGFloat = 50
         static let loginLogoSize: CGFloat = 20
+        static let goalNotificationStackHeight: CGFloat = 40
+        static let timePickerViewHeight: CGFloat = 300
+        static let timePickerHeight: CGFloat = 160
     }
     
     //
@@ -51,6 +54,7 @@ struct ViewValues {
     
     //
     struct Scale {
+        static let datePickerScale: CGFloat = 0.85
         static let pressed: CGFloat = 0.97
         static let `default`: CGFloat = 1.0
     }
