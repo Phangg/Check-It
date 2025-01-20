@@ -24,21 +24,34 @@ struct TextBox: View {
                 .fill(.neutralGray)
                 .frame(maxWidth: .infinity)
                 .frame(height: ViewValues.Size.settingItemHeight)
-            // Text
-            TextField(
-                "목표 설정하기",
-                text: $text,
-                prompt: Text("예) 운동하기, 독서하기 등") // TODO: 폰트 설정 필요
-                    .font(.system(size: 16))
-                    .fontWeight(.regular)
-                    .foregroundStyle(.midGray)
-            )
-            .textInputAutocapitalization(.never)
-            .autocorrectionDisabled(true)
-            .lineLimit(1)
-            .submitLabel(.done)
-            .focused($isFocused)
-            .padding(ViewValues.Padding.medium)
+            //
+            HStack {
+                // Text
+                TextField(
+                    "목표 설정하기",
+                    text: $text,
+                    prompt: Text("예) 운동하기, 독서하기 등") // TODO: 폰트 설정 필요
+                        .font(.system(size: 16))
+                        .fontWeight(.regular)
+                        .foregroundStyle(.midGray)
+                )
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .lineLimit(1)
+                .submitLabel(.done)
+                .focused($isFocused)
+                // Clear Button
+                if !text.isEmpty {
+                    Button {
+                        text = ""
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundStyle(.midGray)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, ViewValues.Padding.medium)
         }
         .onAppear {
             isFocused = true
