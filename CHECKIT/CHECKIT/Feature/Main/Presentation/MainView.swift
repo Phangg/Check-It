@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     @State private var sampleCalendarData: [DayData] = SampleData.days
     @State private var sampleGoalData: [Goal] = SampleData.goals
+    @State private var showAddGoalSheet: Bool = false
     @State private var showSettingSheet: Bool = false
     
     private let calendarRows = Array(
@@ -27,7 +28,10 @@ struct MainView: View {
                     // Divider
                     CustomDivider(color: .cellLevel1, type: .horizontal())
                     // Add Button
-                    AddGoalButton { }
+                    AddGoalButton {
+                        // TODO: AddGoal 시트 열기
+                        showAddGoalSheet = true
+                    }
                 }
                 .padding(.horizontal, ViewValues.Padding.default)
                 // Goals
@@ -37,6 +41,11 @@ struct MainView: View {
             .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { MainViewToolbarContent() }
+            // AddGoal Sheet
+            .sheet(isPresented: $showAddGoalSheet) {
+                AddGoalView()
+                    .interactiveDismissDisabled()
+            }
             // Setting Sheet
             .sheet(isPresented: $showSettingSheet) {
                 SettingView()
