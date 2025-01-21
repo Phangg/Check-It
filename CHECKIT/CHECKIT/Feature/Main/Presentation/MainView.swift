@@ -84,8 +84,13 @@ struct MainView: View {
                 ) {
                     // 시작 위치 조정
                     let startDayIndex = Date.getDayIndexOfWeek(for: sampleCalendarData.first!.date)
-                    ForEach(0..<startDayIndex, id: \.self) { _ in
-                        GrowCell(backgroundColor: .clear)
+                    if startDayIndex != 1 {
+                        ForEach(0..<startDayIndex, id: \.self) { index in
+                            GrowCell(
+                                month: index == 0 ? Date.getMonth(for: sampleCalendarData.first!.date) : nil,
+                                backgroundColor: .clear
+                            )
+                        }
                     }
                     //
                     ForEach(sampleCalendarData.indices, id: \.self) { index in
@@ -93,7 +98,10 @@ struct MainView: View {
                         if Date.getWeekday(for: day.date) == .monday {
                             // 월요일은 Month 표시 or 빈 공간 추가
                             GrowCell(
-                                month: Date.checkFirstWeekMonth(for: day.date),
+                                month: Date.checkFirstWeekMonth(
+                                    for: day.date,
+                                    isStartDay: startDayIndex == 1 && day == sampleCalendarData.first
+                                ),
                                 backgroundColor: .clear
                             )
                             GrowCell(day: day.dayOfMonth,

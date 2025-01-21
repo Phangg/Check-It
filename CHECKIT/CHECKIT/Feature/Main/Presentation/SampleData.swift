@@ -18,7 +18,7 @@ struct SampleData {
     
     
     static let days: [DayData] = Date
-        .range(from: "2024.09.11")
+        .range(from: "2024.09.04")
         .map { date in
             let calendar = Calendar.current
             let dayOfMonth = calendar.component(.day, from: date)

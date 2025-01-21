@@ -32,15 +32,17 @@ extension Date {
         return dates
     }
     
-    // 해당 날짜가 첫째주인지 아닌지 확인해서, 첫째주인 경우 해당 월을 반환
+    // 해당 날짜가 첫째주인지 아닌지 확인해서, 첫째주인 경우 해당 월을 반환 & 유저의 앱 시작 날이라면, 무조건 반환
     static func checkFirstWeekMonth(
-        for date: Date
+        for date: Date,
+        isStartDay: Bool
     ) -> Month? {
         let calendar = Calendar.current
         let day = calendar.component(.day, from: date)
         let month = calendar.component(.month, from: date)
+        // 유저의 앱 시작 날 조건: Month 반환
         // 첫째 주 조건: 1~4일에 해당
-        if day <= 4 {
+        if isStartDay || day <= 4 {
             return Month.getMonth(for: month)
         }
         // 월의 마지막 2~3일에 해당 -> 다음 달 반환
@@ -60,8 +62,9 @@ extension Date {
     ) -> Int {
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date) // 1: 일요일, 2: 월요일 ...
-        // 반환 시, 1: 월요일, 2: 화요일 ...
-        return weekdayIndex - 1
+        let index = weekdayIndex - 1
+        // 반환 시, 1: 월요일, 2: 화요일 ... 7: 일요일
+        return (index == 0) ? 7 : index
     }
     
     // 주어진 날짜의 요일을 반환
@@ -71,5 +74,14 @@ extension Date {
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
         return Weekday.allCases[weekdayIndex - 1]
+    }
+    
+    // 주어진 날짜의 달을 반환
+    static func getMonth(
+        for date: Date
+    ) -> Month {
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        return Month.getMonth(for: month)
     }
 }
