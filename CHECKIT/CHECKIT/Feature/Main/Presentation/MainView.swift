@@ -83,11 +83,15 @@ struct MainView: View {
                     spacing: ViewValues.Padding.small
                 ) {
                     // 시작 위치 조정
-                    let startDayIndex = Date.getDayIndexOfWeek(for: sampleCalendarData.first!.date)
+                    let startDayIndex = Calendar.current.getDayIndexOfWeek(from: sampleCalendarData.first!.date)
                     if startDayIndex != 1 {
                         ForEach(0..<startDayIndex, id: \.self) { index in
                             GrowCell(
-                                month: index == 0 ? Date.getMonth(for: sampleCalendarData.first!.date) : nil,
+                                month: getDisplayMonth(
+                                    showMonth: index == 0,
+                                    startDayIndex: startDayIndex,
+                                    usersAppStartDate: sampleCalendarData.first!.date
+                                ),
                                 backgroundColor: .clear
                             )
                         }
@@ -95,12 +99,12 @@ struct MainView: View {
                     //
                     ForEach(sampleCalendarData.indices, id: \.self) { index in
                         let day = sampleCalendarData[index]
-                        if Date.getWeekday(for: day.date) == .monday {
+                        if Calendar.current.getWeekday(from: day.date) == .monday {
                             // 월요일은 Month 표시 or 빈 공간 추가
                             GrowCell(
-                                month: Date.checkFirstWeekMonth(
+                                month: getDisplayMonth(
                                     for: day.date,
-                                    isStartDay: startDayIndex == 1 && day == sampleCalendarData.first
+                                    usersAppStartDate: sampleCalendarData.first!.date
                                 ),
                                 backgroundColor: .clear
                             )
@@ -145,5 +149,55 @@ struct MainView: View {
                 }
             }
         }
+    }
+    
+    // 해당 날짜에 대한 여러 조건을 확인 후, Month 를 반환하는 메서드
+    fileprivate func getDisplayMonth(
+        for date: Date,
+        usersAppStartDate: Date
+    ) -> Month? {
+        let calendar = Calendar.current
+        let currentMonth = calendar.component(.month, from: date)
+        let startMonth = calendar.component(.month, from: usersAppStartDate)
+        let startDay = calendar.component(.day, from: usersAppStartDate)
+        // 앱 시작 월 특수 처리
+        if currentMonth == startMonth {
+            // 앱 시작일 처리
+            if calendar.isDate(date, inSameDayAs: usersAppStartDate) {
+                return calendar.isDateInLastWeek(date)
+                    ? calendar.getNextMonth(from: date)
+                    : Month.getMonth(for: currentMonth)
+            }
+            // 중복 표시 제거 처리
+            if startDay < 4 && !calendar.isDateInLastWeek(date) {
+                return nil
+            }
+        }
+        // 일반적인 날짜 처리
+        if calendar.isDateInFirstWeek(date) {
+            return Month.getMonth(for: currentMonth)
+        }
+        if calendar.isDateInLastWeek(date) {
+            return calendar.getNextMonth(from: date)
+        }
+        //
+        return nil
+    }
+    
+    fileprivate func getDisplayMonth(
+        showMonth: Bool,
+        startDayIndex: Int,
+        usersAppStartDate: Date
+    ) -> Month? {
+        if showMonth {
+            let calendar = Calendar.current
+            if startDayIndex <= 3,
+               calendar.isDateInLastWeek(usersAppStartDate) {
+                return calendar.getNextMonth(from: usersAppStartDate)
+            } else {
+                return calendar.getMonth(from: usersAppStartDate)
+            }
+        }
+        return nil
     }
 }
