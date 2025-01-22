@@ -11,6 +11,8 @@ import SwiftUI
 struct CHECKITApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     private var appDelegate
+    
+    @StateObject private var themeManager = ThemeManager.shared
 
     @AppStorage(AppStorageKeys.isFirstOnboarding)
     private var isFirstOnboarding: Bool = true
@@ -31,6 +33,10 @@ struct CHECKITApp: App {
                 // 메인 화면
                 MainView()
             }
+        }
+        .environmentObject(themeManager)
+        .onChange(of: themeManager.currentScheme) { _, newScheme in
+            themeManager.updateAppearance(to: newScheme)
         }
     }
 }
