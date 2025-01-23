@@ -5,6 +5,9 @@
 //  Created by phang on 1/13/25.
 //
 
+import Foundation
+import UIKit
+
 enum SettingItem: String, CaseIterable {
     case notification = "알림 설정"
     case appMainColor = "앱 색상 설정"
@@ -72,6 +75,19 @@ enum SettingItem: String, CaseIterable {
             .mail
         case .logout, .cancelAccount:
             .none
+        }
+    }
+    
+    var url: URL? {
+        switch self {
+        case .privacyPolicy:
+            URL(string: "https://github.com/Phangg/Check-It") // TODO: 수정 예정
+        case .termsAndConditions:
+            URL(string: "asdsdffh") // TODO: 수정 예정
+        case .appEvaluation:
+            URL(string: "itms-apps://itunes.apple.com/app/{AppID}") // TODO: 수정 예정
+        default:
+            nil
         }
     }
 }

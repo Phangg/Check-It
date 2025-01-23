@@ -60,7 +60,9 @@ struct SettingListItemCell: View {
                 EmptyView()
             }
         }
+        .frame(maxWidth: .infinity)
         .frame(height: ViewValues.Size.settingItemHeight)
+        .contentShape(.rect)
     }
 }
 
