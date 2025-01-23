@@ -84,6 +84,7 @@ struct GoalListCell: View {
             }
         }
         .buttonStyle(PressButtonStyle(isPressed: $isPressed))
+        .hapticOnTap(type: .impact(feedbackStyle: .light))
     }
 }
 

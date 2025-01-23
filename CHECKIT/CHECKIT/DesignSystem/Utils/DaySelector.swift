@@ -58,9 +58,11 @@ struct DayButton: View {
                 )
         }
         .buttonStyle(.plain)
+        .hapticOnTap(type: .impact(feedbackStyle: .light))
     }
     
     private func handleSelection() {
+        
         if day.day == .allDay {
             let shouldSelect = !day.isSelected
             days.indices.forEach { index in
