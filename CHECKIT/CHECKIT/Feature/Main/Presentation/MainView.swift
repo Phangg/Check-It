@@ -29,7 +29,6 @@ struct MainView: View {
                     CustomDivider(color: .cellLevel1, type: .horizontal())
                     // Add Button
                     AddGoalButton {
-                        // TODO: AddGoal 시트 열기
                         showAddGoalSheet = true
                     }
                 }
@@ -57,14 +56,13 @@ struct MainView: View {
     @ToolbarContentBuilder
     fileprivate func MainViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text(DateFormat.dateToYearDotMonthDotDay(Date())) // TODO: 날짜 수정 예정
+            Text(DateFormat.dateToYearDotMonthDotDay(Date()))
                 .font(.system(size: 18)) // TODO: font 수정 예정
                 .fontWeight(.semibold)
                 .foregroundStyle(.budBlack)
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                // TODO: 설정 시트 열기
                 showSettingSheet = true
             } label: {
                 Image(systemName: "gearshape.fill")
