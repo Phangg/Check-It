@@ -10,6 +10,9 @@ import SwiftUI
 struct SettingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    //
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
+    //
     @State private var isOnNotification: Bool = false
     @State private var showSchemePicker: Bool = false
     @State private var schemePreviews: [SchemePreview] = []
@@ -63,6 +66,16 @@ struct SettingView: View {
                 // 앱 스키마 스크린샷을 위한 준비
                 prepareOverlayWindow()
             }
+            // 앱 색상 변경 - ColorPicker 시트
+            .sheet(
+                isPresented: $showColorPicker,
+                content: {
+                    CustomColorPicker(
+                        appMainColor: appMainColorManager.appMainColor,
+                        showColorPicker: $showColorPicker
+                    )
+                }
+            )
             // 디스플레이 변경 - SchemePicker 시트
             .sheet(
                 isPresented: $showSchemePicker,
