@@ -13,6 +13,7 @@ struct CHECKITApp: App {
     private var appDelegate
     
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var appMainColorManager = AppMainColorManager.shared
 
     @AppStorage(AppStorageKeys.isFirstOnboarding)
     private var isFirstOnboarding: Bool = true
@@ -34,9 +35,12 @@ struct CHECKITApp: App {
                 MainView()
             }
         }
+        //
         .environmentObject(themeManager)
         .onChange(of: themeManager.currentScheme) { _, newScheme in
             themeManager.updateAppearance(to: newScheme)
         }
+        //
+        .environmentObject(appMainColorManager)
     }
 }

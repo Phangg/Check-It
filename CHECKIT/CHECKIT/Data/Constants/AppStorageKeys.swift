@@ -7,4 +7,7 @@
 
 enum AppStorageKeys {
     static let isFirstOnboarding = "isFirstOnboarding"
+    static let appScheme = "AppScheme"
+    static let appMainColor = "AppMainColor"
+    static let appMainColorBrightness = "AppMainColorBrightness"
 }
