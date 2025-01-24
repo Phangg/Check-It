@@ -47,7 +47,7 @@ extension Color {
        hue: CGFloat = 0,         // 색조 변경 (-1 ~ 1 사이)
        saturation: CGFloat = 0,  // 채도 변경 (-1 ~ 1 사이)
        brightness: CGFloat = 0,  // 밝기 변경 (-1 ~ 1 사이)
-       opacity: CGFloat = 1      // 불투명도 변경 (0 ~ 1 사이)
+       opacity: CGFloat = 1      // 투명도 변경 (0 ~ 1 사이)
    ) -> Color {
        // 현재 색을 UIColor로 변환
        let color = UIColor(self)
@@ -59,10 +59,12 @@ extension Color {
        // 색 속성 추출 성공 시
        if color.getHue(&currentHue, saturation: &currentSaturation, brightness: &currentBrigthness, alpha: &currentOpacity) {
            // 새로운 색 생성 및 반환 (기존 값에 입력된 값 더하기)
-           return Color(hue: currentHue + hue,
-                        saturation: currentSaturation + saturation,
-                        brightness: currentBrigthness + brightness,
-                        opacity: currentOpacity + opacity)
+           return Color(
+               hue: max(0, min(1, currentHue + hue)),
+               saturation: max(0, min(1, currentSaturation + saturation)),
+               brightness: max(0, min(1, currentBrigthness + brightness)),
+               opacity: max(0, min(1, currentOpacity * opacity))
+           )
        }
        // 색 추출 실패 시 기존 색 반환
        return self
