@@ -50,18 +50,18 @@ struct GrowCell: View {
         //
         HStack(alignment: .center, spacing: ViewValues.Padding.medium) {
             GrowCell(day: 1, backgroundColor: .cellLevel1)
-            GrowCell(day: 2, backgroundColor: .blue.opacity(ViewValues.Opacity.level2))
-            GrowCell(day: 3, backgroundColor: .blue.opacity(ViewValues.Opacity.level3))
-            GrowCell(day: 4, backgroundColor: .blue.opacity(ViewValues.Opacity.level4))
-            GrowCell(day: 5, backgroundColor: .blue)
+            GrowCell(day: 2, backgroundColor: .accent.opacity(ViewValues.Opacity.level2))
+            GrowCell(day: 3, backgroundColor: .accent.opacity(ViewValues.Opacity.level3))
+            GrowCell(day: 4, backgroundColor: .accent.opacity(ViewValues.Opacity.level4))
+            GrowCell(day: 5, backgroundColor: .accent)
         }
         //
         HStack(alignment: .center, spacing: ViewValues.Padding.medium) {
             GrowCell(backgroundColor: .cellLevel1)
-            GrowCell(backgroundColor: .blue.opacity(ViewValues.Opacity.level2))
-            GrowCell(backgroundColor: .blue.opacity(ViewValues.Opacity.level3))
-            GrowCell(backgroundColor: .blue.opacity(ViewValues.Opacity.level4))
-            GrowCell(backgroundColor: .blue)
+            GrowCell(backgroundColor: .accent.opacity(ViewValues.Opacity.level2))
+            GrowCell(backgroundColor: .accent.opacity(ViewValues.Opacity.level3))
+            GrowCell(backgroundColor: .accent.opacity(ViewValues.Opacity.level4))
+            GrowCell(backgroundColor: .accent)
         }
     }
 }

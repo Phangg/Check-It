@@ -59,7 +59,7 @@ struct OnboardingView: View {
                     get: { state.currentTab },
                     set: { intent.updateTab($0) }
                 ),
-                color: .blue // TODO: color 수정 예정
+                color: .accent // TODO: color 수정 예정
             )
             //
             Spacer()
@@ -74,7 +74,7 @@ struct OnboardingView: View {
                 }
                 Image(systemName: "chevron.right")
             }
-            .tint(.blue) // TODO: color 수정 예정
+            .tint(.accent) // TODO: color 수정 예정
 
         }
         .frame(height: ViewValues.Size.onboardingTopToobarHeight)

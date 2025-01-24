@@ -40,5 +40,5 @@ struct LoadingIndicator: View {
 }
 
 #Preview {
-    LoadingIndicator(currentPage: .constant(.page1), color: .blue)
+    LoadingIndicator(currentPage: .constant(.page1), color: .accent)
 }

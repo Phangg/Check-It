@@ -26,7 +26,7 @@ struct AddGoalButton: View {
             ZStack(alignment: .center) {
                 // BG
                 RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                    .fill(.blue.opacity(0.1)) // TODO: color 수정 필요
+                    .fill(.accent.opacity(0.1)) // TODO: color 수정 필요
                     .overlay {
                         RoundedRectangle(cornerRadius: ViewValues.Radius.default)
                             .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)

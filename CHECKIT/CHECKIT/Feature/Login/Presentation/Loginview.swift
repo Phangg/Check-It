@@ -49,7 +49,7 @@ struct Loginview: View {
             //
             GrowCell(
                 type: .small,
-                backgroundColor: .blue.opacity(ViewValues.Opacity.level3) // TODO: color 수정 필요
+                backgroundColor: .accent.opacity(ViewValues.Opacity.level3) // TODO: color 수정 필요
             )
             //
             Button {

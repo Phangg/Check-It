@@ -52,7 +52,7 @@ struct DayButton: View {
                 .padding(.vertical, ViewValues.Padding.mid)
                 .background(
                     RoundedRectangle(cornerRadius: ViewValues.Radius.medium)
-                        .fill(day.isSelected ? .blue : .softGray) // TODO: color 수정 필요
+                        .fill(day.isSelected ? Color.accent : .softGray) // TODO: color 수정 필요
                         .strokeBorder(day.isSelected ? .clear : .midGray,
                                       lineWidth: ViewValues.Size.lineWidth)
                 )

@@ -15,7 +15,7 @@ struct AppNameLogo: View {
             //
             LazyVGrid(columns: columns, alignment: .center, spacing: ViewValues.Padding.small) {
                 ForEach(0..<14 * 4, id: \.self) { item in
-                    GrowCell(type: .small, backgroundColor: .blue) // TODO: color 수정 필요
+                    GrowCell(type: .small, backgroundColor: .accent) // TODO: color 수정 필요
                 }
             }
             // App Name
@@ -25,7 +25,7 @@ struct AppNameLogo: View {
             //
             LazyVGrid(columns: columns, alignment: .center, spacing: ViewValues.Padding.small) {
                 ForEach(0..<14 * 3, id: \.self) { item in
-                    GrowCell(type: .small, backgroundColor: .blue) // TODO: color 수정 필요
+                    GrowCell(type: .small, backgroundColor: .accent) // TODO: color 수정 필요
                 }
             }
         }

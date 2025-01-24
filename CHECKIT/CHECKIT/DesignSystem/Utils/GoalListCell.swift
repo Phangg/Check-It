@@ -49,7 +49,7 @@ struct GoalListCell: View {
                     // Cell Box & Title
                     HStack(spacing: ViewValues.Padding.default) {
                         // Cell Box
-                        GrowCell(backgroundColor: isCompleted ? .blue : .cellLevel1) // TODO: color 수정 필요
+                        GrowCell(backgroundColor: isCompleted ? .accent : .cellLevel1) // TODO: color 수정 필요
                             .overlay(alignment: .center) {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(isCompleted ? .budWhite : .clear)

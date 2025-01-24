@@ -144,7 +144,7 @@ struct AddGoalView: View {
             // Toggle
             Toggle("NotificationToggle", isOn: $isGoalNotificationEnabled)
                 .labelsHidden()
-                .tint(.blue) // TODO: color 수정 예정
+                .tint(.accent) // TODO: color 수정 예정
         }
         .frame(height: ViewValues.Size.goalNotificationStackHeight)
     }
