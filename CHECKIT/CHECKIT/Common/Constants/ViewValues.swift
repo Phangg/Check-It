@@ -40,7 +40,7 @@ struct ViewValues {
         static let loginButtonHeight: CGFloat = 50
         static let loginLogoSize: CGFloat = 20
         static let goalNotificationStackHeight: CGFloat = 40
-        static let timePickerViewHeight: CGFloat = 300
+        static let pickerViewHeight: CGFloat = 300
         static let timePickerHeight: CGFloat = 160
     }
     

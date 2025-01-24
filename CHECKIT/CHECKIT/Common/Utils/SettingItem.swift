@@ -61,23 +61,6 @@ enum SettingItem: String, CaseIterable {
         }
     }
     
-    var type: SettingItemType {
-        switch self {
-        case .notification:
-            .toggle
-        case .appMainColor, .displayMode:
-            .sheet
-        case .privacyPolicy, .termsAndConditions:
-            .web
-        case .appEvaluation:
-            .store
-        case .request:
-            .mail
-        case .logout, .cancelAccount:
-            .none
-        }
-    }
-    
     var url: URL? {
         switch self {
         case .privacyPolicy:

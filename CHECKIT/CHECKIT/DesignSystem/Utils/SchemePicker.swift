@@ -61,7 +61,7 @@ struct SchemePicker: View {
             .clipShape(.rect(cornerRadius: ViewValues.Radius.default))
         }
         .padding(.horizontal, ViewValues.Padding.default)
-        .presentationDetents([.height(ViewValues.Size.timePickerViewHeight)])
+        .presentationDetents([.height(ViewValues.Size.pickerViewHeight)])
         .presentationBackground(.clear)
     }
     
