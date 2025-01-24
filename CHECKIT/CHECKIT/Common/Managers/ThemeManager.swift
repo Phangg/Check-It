@@ -10,16 +10,15 @@ import SwiftUI
 final class ThemeManager: ObservableObject {
     static let shared = ThemeManager()
     
-    @AppStorage("AppScheme") private var storedAppScheme: AppScheme = .device
+    @AppStorage(AppStorageKeys.appScheme)
+    private var storedAppScheme: AppScheme = .device
+    
     @Published var currentScheme: AppScheme = .device
     
     private init() {
         // AppStorage에 저장된 초기 테마로 설정
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.currentScheme = self.storedAppScheme
-            self.applyScheme(self.currentScheme)
-        }
+        self.currentScheme = self.storedAppScheme
+        self.applyScheme(self.currentScheme)
     }
     
     func updateAppearance(to scheme: AppScheme) {
