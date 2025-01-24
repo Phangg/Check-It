@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GoalListCell: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
     // For managing button animation
     @State private var isPressed = false
     // Check whether the goal has been completed or not
@@ -49,7 +50,7 @@ struct GoalListCell: View {
                     // Cell Box & Title
                     HStack(spacing: ViewValues.Padding.default) {
                         // Cell Box
-                        GrowCell(backgroundColor: isCompleted ? .accent : .cellLevel1) // TODO: color 수정 필요
+                        GrowCell(backgroundColor: isCompleted ? appMainColorManager.appMainColor.mainColor : .cellLevel1)
                             .overlay(alignment: .center) {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(isCompleted ? .budWhite : .clear)

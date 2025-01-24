@@ -11,23 +11,21 @@ enum CustomDefaultButtonStyle {
     case filled
     case bordered
     
-    // TODO: color 수정 필요
     var foregroundColor: Color {
         switch self {
         case .filled:
-                .budWhite
+            .budWhite
         case .bordered:
-                .accent
+            AppMainColorManager.shared.appMainColor.mainColor
         }
     }
     
-    // TODO: color 수정 필요
     var backgroundColor: Color {
         switch self {
         case .filled:
-                .accent
+            AppMainColorManager.shared.appMainColor.mainColor
         case .bordered:
-                .budWhite
+            .budWhite
         }
     }
 }

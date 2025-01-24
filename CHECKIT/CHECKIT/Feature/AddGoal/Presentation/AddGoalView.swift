@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddGoalView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
     @State private var goalTitleText: String = ""
     @State private var selectedDays: [DayInSelector] = [
         .init(day: .allDay, isSelected: true),
@@ -124,7 +125,6 @@ struct AddGoalView: View {
             // TimePickerButton
             if isGoalNotificationEnabled {
                 Button {
-                    // TODO: TimePicker 열기
                     showTimePicker = true
                 } label: {
                     Text(DateFormat.timeFormatter.string(from: selectedTime))
@@ -144,7 +144,7 @@ struct AddGoalView: View {
             // Toggle
             Toggle("NotificationToggle", isOn: $isGoalNotificationEnabled)
                 .labelsHidden()
-                .tint(.accent) // TODO: color 수정 예정
+                .tint(appMainColorManager.appMainColor.mainColor)
         }
         .frame(height: ViewValues.Size.goalNotificationStackHeight)
     }

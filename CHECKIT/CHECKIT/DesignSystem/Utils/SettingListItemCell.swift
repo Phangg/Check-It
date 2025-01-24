@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingListItemCell: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
+    //
     @Binding private var isOnNotification: Bool
     
     private let item: SettingItem
@@ -45,18 +47,23 @@ struct SettingListItemCell: View {
             //
             Spacer(minLength: ViewValues.Padding.medium)
             // trail icon
-            switch item.type {
-            case .toggle:
+            switch item {
+            case .notification:
                 Toggle("", isOn: $isOnNotification)
                     .labelsHidden()
-                    .tint(.blue) // TODO: color 수정 예정
-            case .sheet, .web, .store, .mail:
+                    .tint(appMainColorManager.appMainColor.mainColor)
+            case .appMainColor:
+                Circle()
+                    .fill(appMainColorManager.appMainColor.mainColor)
+                    .strokeBorder(.neutralGray, lineWidth: ViewValues.Size.thickLineWidth)
+                    .frame(width: ViewValues.Size.cellBox)
+            case .displayMode, .privacyPolicy, .termsAndConditions, .appEvaluation, .request:
                 Image(systemName: "chevron.right")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: ViewValues.Size.settingItemTrailImage, height: ViewValues.Size.settingItemTrailImage)
                     .foregroundStyle(.midGray)
-            case .none:
+            case .logout, .cancelAccount:
                 EmptyView()
             }
         }

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
+    //
     @StateObject var container: MVIContainer<OnboardingIntent, OnboardingModelState>
     private var intent: OnboardingIntent { container.intent }
     private var state: OnboardingModelState { container.model }
@@ -59,7 +61,7 @@ struct OnboardingView: View {
                     get: { state.currentTab },
                     set: { intent.updateTab($0) }
                 ),
-                color: .accent // TODO: color 수정 예정
+                color: appMainColorManager.appMainColor.mainColor
             )
             //
             Spacer()
@@ -74,7 +76,7 @@ struct OnboardingView: View {
                 }
                 Image(systemName: "chevron.right")
             }
-            .tint(.accent) // TODO: color 수정 예정
+            .tint(appMainColorManager.appMainColor.mainColor)
 
         }
         .frame(height: ViewValues.Size.onboardingTopToobarHeight)

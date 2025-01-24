@@ -30,6 +30,7 @@ struct DaySelector: View {
 }
 
 struct DayButton: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
     @Binding private var day: DayInSelector
     @Binding private var days: [DayInSelector]
     
@@ -52,7 +53,7 @@ struct DayButton: View {
                 .padding(.vertical, ViewValues.Padding.mid)
                 .background(
                     RoundedRectangle(cornerRadius: ViewValues.Radius.medium)
-                        .fill(day.isSelected ? Color.accent : .softGray) // TODO: color 수정 필요
+                        .fill(day.isSelected ? appMainColorManager.appMainColor.mainColor : .softGray)
                         .strokeBorder(day.isSelected ? .clear : .midGray,
                                       lineWidth: ViewValues.Size.lineWidth)
                 )

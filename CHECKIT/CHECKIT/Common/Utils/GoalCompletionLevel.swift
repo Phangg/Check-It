@@ -15,17 +15,19 @@ enum CompletionLevel: String, Hashable, CaseIterable {
     case level5
     
     var color: Color {
+        let mainColor = AppMainColorManager.shared.appMainColor.mainColor
+        //
         switch self {
         case .level1:
-            .cellLevel1
+            return .cellLevel1
         case .level2:
-            .accent.opacity(ViewValues.Opacity.level2) // TODO: color 수정 예정
+            return mainColor.opacity(ViewValues.Opacity.level2)
         case .level3:
-            .accent.opacity(ViewValues.Opacity.level3)
+            return mainColor.opacity(ViewValues.Opacity.level3)
         case .level4:
-            .accent.opacity(ViewValues.Opacity.level4)
+            return mainColor.opacity(ViewValues.Opacity.level4)
         case .level5:
-            .accent
+            return mainColor
         }
     }
 }

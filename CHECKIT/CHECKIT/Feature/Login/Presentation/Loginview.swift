@@ -9,6 +9,8 @@ import SwiftUI
 import AuthenticationServices
 
 struct Loginview: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
+    
     var body: some View {
         VStack(alignment: .center, spacing: ViewValues.Padding.huge) {
             // Logo
@@ -49,7 +51,7 @@ struct Loginview: View {
             //
             GrowCell(
                 type: .small,
-                backgroundColor: .accent.opacity(ViewValues.Opacity.level3) // TODO: color 수정 필요
+                backgroundColor: appMainColorManager.appMainColor.mainColor.opacity(ViewValues.Opacity.level3)
             )
             //
             Button {

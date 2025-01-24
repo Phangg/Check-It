@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddGoalButton: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
     // For managing button animation
     @State private var isPressed = false
     
@@ -26,7 +27,7 @@ struct AddGoalButton: View {
             ZStack(alignment: .center) {
                 // BG
                 RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                    .fill(.accent.opacity(0.1)) // TODO: color 수정 필요
+                    .fill(appMainColorManager.appMainColor.mainColor.opacity(0.1))
                     .overlay {
                         RoundedRectangle(cornerRadius: ViewValues.Radius.default)
                             .fill(isPressed ? .budBlack.opacity(ViewValues.Opacity.light) : .clear)

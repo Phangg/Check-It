@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AppNameLogo: View {
+    @EnvironmentObject private var appMainColorManager: AppMainColorManager
+
     private let columns = Array(repeating: GridItem(.flexible(), spacing: ViewValues.Padding.small), count: 14)
     
     var body: some View {
@@ -15,7 +17,7 @@ struct AppNameLogo: View {
             //
             LazyVGrid(columns: columns, alignment: .center, spacing: ViewValues.Padding.small) {
                 ForEach(0..<14 * 4, id: \.self) { item in
-                    GrowCell(type: .small, backgroundColor: .accent) // TODO: color 수정 필요
+                    GrowCell(type: .small, backgroundColor: appMainColorManager.appMainColor.mainColor)
                 }
             }
             // App Name
@@ -25,7 +27,7 @@ struct AppNameLogo: View {
             //
             LazyVGrid(columns: columns, alignment: .center, spacing: ViewValues.Padding.small) {
                 ForEach(0..<14 * 3, id: \.self) { item in
-                    GrowCell(type: .small, backgroundColor: .accent) // TODO: color 수정 필요
+                    GrowCell(type: .small, backgroundColor: appMainColorManager.appMainColor.mainColor)
                 }
             }
         }
