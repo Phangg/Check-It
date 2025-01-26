@@ -9,7 +9,13 @@ import SwiftUI
 import AuthenticationServices
 
 struct Loginview: View {
+    @Environment(\.openURL) private var openURL
+    //
     @EnvironmentObject private var appMainColorManager: AppMainColorManager
+    //
+    @State private var showWebViewSheet: Bool = false
+    @State private var errorMessage: String = ""
+    @State private var showErrorAlert: Bool = false
     
     var body: some View {
         VStack(alignment: .center, spacing: ViewValues.Padding.huge) {
@@ -35,17 +41,41 @@ struct Loginview: View {
                 Spacer(minLength: ViewValues.Padding.default)
                 // Info & Request
                 VStack(alignment: .leading, spacing: ViewValues.Padding.medium) {
-                    RequestButton(type: .privacyPolicy)
-                    RequestButton(type: .request)
+                    RequestButton(.privacyPolicy)
+                    RequestButton(.request)
                 }
             }
         }
         .padding(ViewValues.Padding.default)
+        // 개인정보 처리 방침 - WebView 시트
+        .sheet(
+            isPresented: $showWebViewSheet,
+            onDismiss: {
+                if !errorMessage.isEmpty {
+                    showErrorAlert = true
+                }
+            },
+            content: {
+                WebView(
+                    url: SettingItem.privacyPolicy.url!, // openPrivacyPolicyWebView() 에서 검증
+                    errorMessage: $errorMessage,
+                    showWebViewSheet: $showWebViewSheet
+                )
+            }
+        )
+        // WebView 에러 alert
+        .alert(isPresented: $showErrorAlert) { // TODO: alert 컴포넌트 제작 예정
+            Alert(
+                title: Text("개인정보 처리 방침 페이지 로드 오류"),
+                message: Text(errorMessage),
+                dismissButton: .default(Text("확인")) { errorMessage = "" }
+            )
+        }
     }
     
     @ViewBuilder
-    fileprivate func RequestButton(type: SettingItem) -> some View {
-        let text = type == .request ? "로그인에 문제가 있어요" : type.title
+    fileprivate func RequestButton(_ item: SettingItem) -> some View {
+        let text = item == .request ? "로그인에 문제가 있어요" : item.title
         //
         HStack(alignment: .center, spacing: ViewValues.Padding.medium) {
             //
@@ -55,7 +85,7 @@ struct Loginview: View {
             )
             //
             Button {
-                // TODO: - 버튼에 맞는 웹으로 이동
+                handleTapAction(item)
             } label: {
                 Text(text)
                     .font(.system(size: 13)) // TODO: font 수정 필요
@@ -65,5 +95,30 @@ struct Loginview: View {
             }
             .buttonStyle(.plain)
         }
+    }
+    
+    private func handleTapAction(_ item: SettingItem) {
+        switch item {
+        case .privacyPolicy:
+            openPrivacyPolicyWebView(url: item.url)
+        case .request:
+            openEmailApp()
+        default:
+            break
+        }
+    }
+    
+    private func openPrivacyPolicyWebView(url: URL?) {
+        if let url = url, url.isValid() {
+            showWebViewSheet = true
+        } else {
+            errorMessage = "잘못된 URL 입니다."
+            showErrorAlert = true
+        }
+    }
+    
+    private func openEmailApp() {
+        let supportEmail = SupportEmail(toAddress: "a@a.com") // TODO: 이메일 주소 config 에 저장 및 수정 예정
+        supportEmail.send(openURL: openURL)
     }
 }
