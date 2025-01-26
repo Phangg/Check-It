@@ -20,7 +20,8 @@ struct SettingView: View {
     @State private var showColorPicker: Bool = false
     @State private var selectedWebViewURL: URL? = nil
     @State private var showWebViewSheet: Bool = false
-    @State private var showInvalidWebViewMessage = false
+    @State private var errorMessage: String = ""
+    @State private var showErrorAlert: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -91,37 +92,26 @@ struct SettingView: View {
                 isPresented: $showWebViewSheet,
                 onDismiss: {
                     selectedWebViewURL = nil
-                    showInvalidWebViewMessage = false
+                    if !errorMessage.isEmpty {
+                        showErrorAlert = true
+                    }
                 },
                 content: {
-                    if let url = selectedWebViewURL, url.isValid() {
-                        WebView(url: url)
-                    } else if showInvalidWebViewMessage {
-                        // 10초 후 잘못된 페이지 메시지
-                        VStack(alignment: .center, spacing: ViewValues.Padding.large) {
-                            Group {
-                                //
-                                Text("403 Forbidden")
-                                //
-                                Text("페이지를 찾을 수 없음")
-                            }
-                            .font(.system(size: 20)) // TODO: font 수정 예정
-                            .fontWeight(.bold)
-                            .foregroundStyle(.budBlack)
-                        }
-                    } else {
-                        ProgressView()
-                            .scaleEffect(ViewValues.Scale.big)
-                            .tint(.budBlack)
-                            .onAppear {
-                                // 10초 후에 잘못된 페이지 메시지 표시
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                                    showInvalidWebViewMessage = true
-                                }
-                            }
-                    }
+                    WebView(
+                        url: selectedWebViewURL!, // openPrivacyPolicyWebView() 에서 검증
+                        errorMessage: $errorMessage,
+                        showWebViewSheet: $showWebViewSheet
+                    )
                 }
             )
+            // 에러 alert
+            .alert(isPresented: $showErrorAlert) { // TODO: alert 컴포넌트 제작 예정
+                Alert(
+                    title: Text("페이지 로드 오류"),
+                    message: Text(errorMessage),
+                    dismissButton: .default(Text("확인")) { errorMessage = "" }
+                )
+            }
         }
     }
     
@@ -155,10 +145,7 @@ struct SettingView: View {
                 showSchemePicker = true
             }
         case .privacyPolicy, .termsAndConditions:
-            if let url = item.url {
-                selectedWebViewURL = url
-                showWebViewSheet = true
-            }
+            openPrivacyPolicyWebView(url: item.url)
         case .appEvaluation:
             if let url = item.url {
                 openURL(url)
@@ -240,6 +227,16 @@ struct SettingView: View {
             emptyController.view.backgroundColor = .clear
             window.rootViewController = emptyController
             overlayWindow = window
+        }
+    }
+    
+    private func openPrivacyPolicyWebView(url: URL?) {
+        if let url = url, url.isValid() {
+            selectedWebViewURL = url
+            showWebViewSheet = true
+        } else {
+            errorMessage = "잘못된 URL 입니다."
+            showErrorAlert = true
         }
     }
 }
