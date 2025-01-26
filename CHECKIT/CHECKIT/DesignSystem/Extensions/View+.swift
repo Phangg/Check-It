@@ -11,9 +11,18 @@ extension View {
     //
     func animatedStrikethrough(
         isActive: Bool,
-        color: Color
+        color: Color,
+        height: CGFloat = 1,
+        duration: Double = ViewValues.Duration.regular
     ) -> some View {
-        modifier(AnimatedStrikethrough(isActive: isActive, color: color))
+        modifier(
+            AnimatedStrikethrough(
+                isActive: isActive,
+                color: color,
+                height: height,
+                duration: duration
+            )
+        )
     }
     
     //

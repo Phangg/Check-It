@@ -18,15 +18,19 @@ struct CHECKITApp: App {
     @AppStorage(AppStorageKeys.isFirstOnboarding)
     private var isFirstOnboarding: Bool = true
     
-    @State private var isNotLogin: Bool = true // TODO: 로그인 정보 토큰 확인 키체인으로 수정 예정
+    @State private var isFetched: Bool = false
+    @State private var isLoggedOut: Bool = true // TODO: 로그인 정보 토큰 확인 키체인으로 수정 예정
     
     var body: some Scene {
         WindowGroup {
-            if isFirstOnboarding {
+            if !isFetched {
+                // 데이터 받아오는 동안, Splash 화면
+                SplashView(isFetched: $isFetched)
+            } else if isFirstOnboarding {
                 // 앱 최초 실행 시, 온보딩화면을 띄우기
                 OnboardingView()
-                    // TODO: 추후 키체인 코드, 로그인 코드 작성 시 다시 사용 예정
-//                    .sheet(isPresented: $isNotLogin) {
+//                    // TODO: 추후 키체인 코드, 로그인 코드 작성 시 다시 사용 예정
+//                    .sheet(isPresented: $isLoggedOut) {
 //                        Loginview()
 //                            .presentationDragIndicator(.visible)
 //                    }
