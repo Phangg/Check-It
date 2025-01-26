@@ -64,7 +64,7 @@ struct Loginview: View {
             }
         )
         // WebView 에러 alert
-        .alert(isPresented: $showErrorAlert) { // TODO: alert 컴포넌트 제작 예정
+        .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("개인정보 처리 방침 페이지 로드 오류"),
                 message: Text(errorMessage),

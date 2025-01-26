@@ -105,7 +105,7 @@ struct SettingView: View {
                 }
             )
             // 에러 alert
-            .alert(isPresented: $showErrorAlert) { // TODO: alert 컴포넌트 제작 예정
+            .alert(isPresented: $showErrorAlert) {
                 Alert(
                     title: Text("페이지 로드 오류"),
                     message: Text(errorMessage),
