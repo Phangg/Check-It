@@ -14,7 +14,7 @@ struct PressButtonStyle: ButtonStyle {
         configuration.label
             .scaleEffect(isPressed ? ViewValues.Scale.pressed : ViewValues.Scale.default)
             .onChange(of: configuration.isPressed) { _, newValue in
-                withAnimation(.easeInOut(duration: ViewValues.Duration.regular)) {
+                withAnimation(.easeInOut(duration: ViewValues.Duration.short)) {
                     isPressed = newValue
                 }
             }

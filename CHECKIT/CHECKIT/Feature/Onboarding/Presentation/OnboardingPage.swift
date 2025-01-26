@@ -23,7 +23,7 @@ struct OnboardingPage: View {
                     .tag(page)
             }
         }
-        .animation(.easeInOut(duration: ViewValues.Duration.regular), value: currentTab)
+        .animation(.easeInOut(duration: ViewValues.Duration.short), value: currentTab)
         .tabViewStyle(.page(indexDisplayMode: .never))
     }
     

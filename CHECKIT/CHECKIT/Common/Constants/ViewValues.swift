@@ -30,6 +30,7 @@ struct ViewValues {
         static let thickLineWidth: CGFloat = 3
         static let cellBox: CGFloat = 30
         static let cellBoxSmall: CGFloat = 20
+        static let cellBoxLarge: CGFloat = 90
         static let streakImageHeight: CGFloat = 20
         static let currentIndicatorWidth: CGFloat = 50
         static let indicator: CGFloat = 10
@@ -68,9 +69,10 @@ struct ViewValues {
     
     //
     struct Duration {
-//        static let short: Double =
-        static let regular: Double = 0.15
-        static let long: Double = 0.3
+        static let short: Double = 0.15
+        static let regular: Double = 0.3
+        static let medium: Double = 0.5
+        static let long: Double = 1.5
     }
     
     //

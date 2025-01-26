@@ -33,7 +33,7 @@ struct LoadingIndicator: View {
                         width: page == currentPage ? ViewValues.Size.currentIndicatorWidth : ViewValues.Size.indicator,
                         height: ViewValues.Size.indicator
                     )
-                    .animation(.easeInOut(duration: ViewValues.Duration.regular), value: currentPage)
+                    .animation(.easeInOut(duration: ViewValues.Duration.short), value: currentPage)
             }
         }
     }

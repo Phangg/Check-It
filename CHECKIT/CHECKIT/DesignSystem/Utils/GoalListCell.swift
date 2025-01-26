@@ -78,7 +78,7 @@ struct GoalListCell: View {
                                 .font(.footnote) // TODO: - 버튼 폰트 설정 필요
                         }
                         .transition(.opacity)
-                        .animation(.easeInOut(duration: ViewValues.Duration.long), value: goalStreakCount)
+                        .animation(.easeInOut(duration: ViewValues.Duration.regular), value: goalStreakCount)
                     }
                 }
                 .padding(.horizontal, ViewValues.Padding.default)
