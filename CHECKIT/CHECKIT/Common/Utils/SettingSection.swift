@@ -10,6 +10,7 @@ enum SettingSection: String, CaseIterable {
     case styleAndTheme = "Style & Theme"
     case information = "Information"
     case support = "Support"
+    case aboutApp = "About App"
     case account = "Account"
 
     var items: [SettingItem] {
@@ -22,6 +23,8 @@ enum SettingSection: String, CaseIterable {
             return [.privacyPolicy, .termsAndConditions]
         case .support:
             return [.appEvaluation, .request]
+        case .aboutApp:
+            return [.appVersion]
         case .account:
             return [.logout, .cancelAccount]
         }

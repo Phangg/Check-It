@@ -16,9 +16,10 @@ enum SettingItem: String, CaseIterable {
     case termsAndConditions = "이용 약관"
     case appEvaluation = "앱 평가"
     case request = "문의 및 요청"
+    case appVersion = "앱 버전"
     case logout = "로그아웃"
     case cancelAccount = "회원탈퇴"
-    
+
     var title: String { self.rawValue }
     
     var subtitle: String? {
@@ -33,7 +34,7 @@ enum SettingItem: String, CaseIterable {
             "앱스토어에서 평가해 주세요"
         case .request:
             "앱에 대한 문의나 요청을 보내주세요"
-        case .privacyPolicy, .termsAndConditions, .logout, .cancelAccount:
+        case .privacyPolicy, .termsAndConditions, .appVersion, .logout, .cancelAccount:
             nil
         }
     }
@@ -51,9 +52,11 @@ enum SettingItem: String, CaseIterable {
         case .termsAndConditions:
             "text.document.fill"
         case .appEvaluation:
-            "apps.iphone"
+            "heart.fill"
         case .request:
             "envelope.fill"
+        case .appVersion:
+            "apps.iphone"
         case .logout:
             "figure.walk"
         case .cancelAccount:

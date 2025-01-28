@@ -63,6 +63,11 @@ struct SettingListItemCell: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: ViewValues.Size.settingItemTrailImage, height: ViewValues.Size.settingItemTrailImage)
                     .foregroundStyle(.midGray)
+            case .appVersion:
+                Text("Ver \(AppVersion.appVersion).\(AppVersion.buildVersion)")
+                    .font(.system(size: 16))// TODO: font 수정 예정
+                    .fontWeight(.regular)
+                    .foregroundStyle(.budBlack)
             case .logout, .cancelAccount:
                 EmptyView()
             }
