@@ -49,10 +49,7 @@ struct AddGoalView: View {
                             }
                     }
                     //
-                    CustomDivider(
-                        color: .cellLevel1,
-                        type: .horizontal()
-                    )
+                    CustomDivider()
                     // WeekDay
                     AddGoalSectionView(
                         title: "요일 설정",
@@ -65,10 +62,7 @@ struct AddGoalView: View {
                             }
                     }
                     //
-                    CustomDivider(
-                        color: .cellLevel1,
-                        type: .horizontal()
-                    )
+                    CustomDivider()
                     // Notification
                     AddGoalSectionView(
                         title: "알림 설정",

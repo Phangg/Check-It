@@ -26,7 +26,7 @@ struct MainView: View {
                 //
                 Group {
                     // Divider
-                    CustomDivider(color: .cellLevel1, type: .horizontal())
+                    CustomDivider()
                     // Add Button
                     AddGoalButton {
                         showAddGoalSheet = true

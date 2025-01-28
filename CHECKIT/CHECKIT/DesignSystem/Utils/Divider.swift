@@ -8,8 +8,16 @@
 import SwiftUI
 
 struct CustomDivider: View {
-    let color: Color
-    let type: DividerType
+    private let color: Color
+    private let type: DividerType
+    
+    init(
+        color: Color = .cellLevel1,
+        type: DividerType = .horizontal()
+    ) {
+        self.color = color
+        self.type = type
+    }
     
     var body: some View {
         switch type {
@@ -24,9 +32,6 @@ struct CustomDivider: View {
 }
 
 #Preview {
-    CustomDivider(
-        color: .cellLevel1,
-        type: .horizontal()
-    )
-    .padding(ViewValues.Padding.default)
+    CustomDivider()
+        .padding(ViewValues.Padding.default)
 }
