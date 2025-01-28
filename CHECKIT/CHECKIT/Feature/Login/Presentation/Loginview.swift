@@ -109,12 +109,12 @@ struct Loginview: View {
     }
     
     private func openPrivacyPolicyWebView(url: URL?) {
-        if let url = url, url.isValid() {
-            showWebViewSheet = true
-        } else {
+        guard let url = url, url.isValid() else {
             errorMessage = "잘못된 URL 입니다."
             showErrorAlert = true
+            return
         }
+        showWebViewSheet = true
     }
     
     private func openEmailApp() {

@@ -25,40 +25,62 @@ struct SettingView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: ViewValues.Padding.zero) {
-                //
-                List {
-                    // Section
+            //
+            ScrollView(.vertical) {
+                // Settings
+                LazyVStack(alignment: .leading, spacing: ViewValues.Padding.default) {
                     ForEach(SettingSection.allCases, id: \.self) { section in
-                        Section {
-                            // Items
-                            ForEach(section.items, id: \.self) { item in
-                                if item == .notification {
+                        // Section
+                        Text(section.rawValue)
+                            .font(.system(size: 16)) // TODO: font 수정 예정
+                            .fontWeight(.medium)
+                            .foregroundStyle(.budBlack)
+                            .frame(
+                                height: ViewValues.Size.settingSectionHeight,
+                                alignment: .center
+                            )
+                        // Items
+                        ForEach(section.items, id: \.self) { item in
+                            switch item {
+                            case .notification:
+                                SettingListItemCell(
+                                    isOnNotification: $isOnNotification,
+                                    item: item
+                                )
+                            case .appVersion:
+                                SettingListItemCell(
+                                    isOnNotification: nil,
+                                    item: item
+                                )
+                            default:
+                                Button {
+                                    handleTapAction(item)
+                                } label: {
                                     SettingListItemCell(
-                                        isOnNotification: $isOnNotification,
+                                        isOnNotification: nil,
                                         item: item
                                     )
-                                } else {
-                                    Button {
-                                        handleTapAction(item)
-                                    } label: {
-                                        SettingListItemCell(
-                                            isOnNotification: nil,
-                                            item: item
-                                        )
-                                    }
-                                    .buttonStyle(.plain)
                                 }
+                                .buttonStyle(.plain)
                             }
-                        } header: {
-                            Text(section.rawValue)
-                                .font(.system(size: 16)) // TODO: font 수정 예정
-                                .fontWeight(.medium)
-                                .foregroundStyle(.budBlack)
+                            // Divider - Item
+                            if item != section.items.last! {
+                                CustomDivider()
+                                    .padding(.trailing, -ViewValues.Padding.default)
+                            }
+                        }
+                        // Divider - Section
+                        if section != .account {
+                            CustomDivider(
+                                color: .softGray,
+                                type: .horizontal(height: ViewValues.Padding.medium)
+                            )
+                            .padding(.horizontal, -ViewValues.Padding.default)
                         }
                     }
                 }
-                .listStyle(.plain)
+                .padding(.horizontal, ViewValues.Padding.default)
+                .padding(.bottom, ViewValues.Padding.big)
             }
             .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
@@ -89,7 +111,10 @@ struct SettingView: View {
             )
             // 개인정보 처리 방침 & 이용 약관 - WebView 시트
             .sheet(
-                isPresented: $showWebViewSheet,
+                isPresented: .init(
+                    get: { showWebViewSheet && selectedWebViewURL != nil },
+                    set: { showWebViewSheet = $0 }
+                ),
                 onDismiss: {
                     selectedWebViewURL = nil
                     if !errorMessage.isEmpty {
@@ -98,7 +123,7 @@ struct SettingView: View {
                 },
                 content: {
                     WebView(
-                        url: selectedWebViewURL!, // openPrivacyPolicyWebView() 에서 검증
+                        url: selectedWebViewURL!, // openWebView() 에서 검증
                         errorMessage: $errorMessage,
                         showWebViewSheet: $showWebViewSheet
                     )
@@ -145,7 +170,7 @@ struct SettingView: View {
                 showSchemePicker = true
             }
         case .privacyPolicy, .termsAndConditions:
-            openPrivacyPolicyWebView(url: item.url)
+            openWebView(url: item.url)
         case .appEvaluation:
             if let url = item.url {
                 openURL(url)
@@ -157,6 +182,8 @@ struct SettingView: View {
             print("logout") // TODO: 수정 예정
         case .cancelAccount:
             print("cancelAccount") // TODO: 수정 예정
+        case .appVersion:
+            break
         }
     }
     
@@ -230,13 +257,13 @@ struct SettingView: View {
         }
     }
     
-    private func openPrivacyPolicyWebView(url: URL?) {
-        if let url = url, url.isValid() {
-            selectedWebViewURL = url
-            showWebViewSheet = true
-        } else {
+    private func openWebView(url: URL?) {
+        guard let url = url, url.isValid() else {
             errorMessage = "잘못된 URL 입니다."
             showErrorAlert = true
+            return
         }
+        selectedWebViewURL = url
+        showWebViewSheet = true
     }
 }

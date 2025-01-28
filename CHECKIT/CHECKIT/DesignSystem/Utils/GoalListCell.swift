@@ -53,6 +53,7 @@ struct GoalListCell: View {
                         GrowCell(backgroundColor: isCompleted ? appMainColorManager.appMainColor.mainColor : .cellLevel1)
                             .overlay(alignment: .center) {
                                 Image(systemName: "checkmark")
+                                    .fontWeight(.semibold)
                                     .foregroundStyle(isCompleted ? .budWhite : .clear)
                             }
                         // Title

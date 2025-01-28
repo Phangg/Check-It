@@ -27,13 +27,13 @@ struct ViewValues {
         static let goalCellHeight: CGFloat = 70
         static let lineWidth: CGFloat = 0.35
         static let midLineWidth: CGFloat = 2
-        static let thickLineWidth: CGFloat = 3
         static let cellBox: CGFloat = 30
         static let cellBoxSmall: CGFloat = 20
         static let cellBoxLarge: CGFloat = 90
         static let streakImageHeight: CGFloat = 20
         static let currentIndicatorWidth: CGFloat = 50
         static let indicator: CGFloat = 10
+        static let settingSectionHeight: CGFloat = 30
         static let settingItemImage: CGFloat = 25
         static let settingItemTrailImage: CGFloat = 14
         static let settingItemHeight: CGFloat = 40
@@ -46,7 +46,6 @@ struct ViewValues {
         static let pickerViewHeight: CGFloat = 300
         static let timePickerHeight: CGFloat = 160
         static let colorPickerIcon: CGFloat = 25
-        static let circleButtonSize: CGFloat = 25
         static let colorSliderHeight: CGFloat = 15
         static let colorSliderKnobSize: CGFloat = 30
     }

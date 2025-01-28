@@ -37,7 +37,7 @@ struct CustomColorPicker: View {
             LazyVGrid(columns: adaptiveColumn, spacing: ViewValues.Padding.default) {
                 //
                 ForEach(colors, id: \.self) { color in
-                    CircleButton(
+                    CellButton(
                         item: color.adjust(brightness: color == temporarySelectedColor ? brightness : 0),
                         isSelected: color == temporarySelectedColor
                     ) {
@@ -117,7 +117,7 @@ struct CustomColorPicker: View {
 }
 
 // MARK: - CustomColorPicker 에서만 사용되는 버튼
-fileprivate struct CircleButton: View {
+fileprivate struct CellButton: View {
     private let item: Color
     private let isSelected: Bool
     private let action: () -> Void
@@ -133,19 +133,11 @@ fileprivate struct CircleButton: View {
     }
     
     var body: some View {
-        Circle()
-            .fill(item)
-            .frame(width: ViewValues.Size.circleButtonSize)
-            .overlay {
-                Circle()
-                    .stroke(item.adjust(brightness: -0.2), lineWidth: ViewValues.Size.midLineWidth)
-            }
-            .padding(ViewValues.Padding.small)
-            .overlay {
-                if isSelected {
-                    Circle()
-                        .stroke(.budBlack, lineWidth: ViewValues.Size.midLineWidth)
-                }
+        GrowCell(backgroundColor: item)
+            .overlay(alignment: .center) {
+                Image(systemName: "checkmark")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(isSelected ? .budWhite : .clear)
             }
             .onTapGesture {
                 action()
@@ -200,7 +192,7 @@ fileprivate struct ColorSlider: View {
                         .fill(selectedColor.adjust(brightness: value))
                         .overlay {
                             Circle()
-                                .stroke(.budWhite, lineWidth: ViewValues.Size.midLineWidth)
+                                .strokeBorder(.budWhite, lineWidth: ViewValues.Size.midLineWidth)
                         }
                         .shadow(radius: 8, y: 5)
                         .frame(width: ViewValues.Size.colorSliderKnobSize,

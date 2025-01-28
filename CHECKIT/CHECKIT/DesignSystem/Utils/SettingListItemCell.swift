@@ -53,10 +53,7 @@ struct SettingListItemCell: View {
                     .labelsHidden()
                     .tint(appMainColorManager.appMainColor.mainColor)
             case .appMainColor:
-                Circle()
-                    .fill(appMainColorManager.appMainColor.mainColor)
-                    .strokeBorder(.neutralGray, lineWidth: ViewValues.Size.thickLineWidth)
-                    .frame(width: ViewValues.Size.cellBox)
+                GrowCell(type:.small, backgroundColor: appMainColorManager.appMainColor.mainColor)
             case .displayMode, .privacyPolicy, .termsAndConditions, .appEvaluation, .request:
                 Image(systemName: "chevron.right")
                     .resizable()
