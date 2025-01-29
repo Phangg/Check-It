@@ -8,7 +8,7 @@
 import Foundation
 
 struct Goal: Identifiable {
-    let id: UUID
+    let id: UUID = UUID()
     var title: String               // 목표 이름
     var activeDays: Set<Weekday>    // 실행할 요일
     var notificationEnabled: Bool   // 알림 활성화 여부
