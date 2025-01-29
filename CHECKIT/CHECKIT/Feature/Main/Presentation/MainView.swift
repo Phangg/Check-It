@@ -130,18 +130,25 @@ struct MainView: View {
     fileprivate func GoalList() -> some View {
         CustomHorizontalScrollView {
             LazyVStack(alignment: .center, spacing: ViewValues.Padding.default) {
-                ForEach($sampleGoalData.indices, id: \.self) { index in
+                ForEach($sampleGoalData) { $goal in
                     GoalListCell(
-                        isCompleted: $sampleGoalData[index].isActive,
-                        goalStreakCount: $sampleGoalData[index].streakCount,
-                        title: sampleGoalData[index].title
+                        isCompleted: $goal.isActive,
+                        goalStreakCount: $goal.streakCount,
+                        cellID: goal.id,
+                        title: goal.title
                     ) {
                         // TODO: 메서드 수정 예정
-                        if sampleGoalData[index].isActive {
-                            sampleGoalData[index].streakCount += 1
+                        if goal.isActive {
+                            goal.streakCount += 1
                         } else {
-                            sampleGoalData[index].streakCount -= 1
+                            goal.streakCount -= 1
                         }
+                    } editAction: {
+                        // TODO:
+                        print("EDIT")
+                    } deleteAction: {
+                        // TODO:
+                        print("DELETE")
                     }
                     .padding(.horizontal, ViewValues.Padding.default)
                 }

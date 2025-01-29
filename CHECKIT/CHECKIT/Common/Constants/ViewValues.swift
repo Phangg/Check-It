@@ -48,6 +48,8 @@ struct ViewValues {
         static let colorPickerIcon: CGFloat = 25
         static let colorSliderHeight: CGFloat = 15
         static let colorSliderKnobSize: CGFloat = 30
+        static let swipeActionButtonSize: CGFloat = 40
+        static let swipeActionIconSize: CGFloat = 30
     }
     
     //
@@ -77,6 +79,7 @@ struct ViewValues {
     //
     struct Opacity {
         static let light: CGFloat = 0.05
+        static let soft: CGFloat = 0.1
         static let level2: CGFloat = 0.25
         static let level3: CGFloat = 0.5
         static let level4: CGFloat = 0.75

@@ -31,7 +31,13 @@ extension View {
     }
     
     //
-    func hapticOnTap(type: HapticType) -> some View {
-        modifier(HapticTapModifier(type: type))
+    func hapticOnTap(type: HapticType, isActive: Bool = true) -> some View {
+        Group {
+            if isActive {
+                self.modifier(HapticTapModifier(type: type))
+            } else {
+                self
+            }
+        }
     }
 }
