@@ -28,7 +28,7 @@ struct OnboardingPage: View {
     }
     
     @ViewBuilder
-    fileprivate func Page(_ page: OnboardingTab) -> some View {
+    private func Page(_ page: OnboardingTab) -> some View {
         VStack(alignment: .center, spacing: ViewValues.Padding.zero) {
             // Title & Description
             VStack(alignment: .center, spacing: ViewValues.Padding.default) {

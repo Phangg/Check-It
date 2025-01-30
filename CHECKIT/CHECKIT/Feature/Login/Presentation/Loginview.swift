@@ -74,7 +74,7 @@ struct Loginview: View {
     }
     
     @ViewBuilder
-    fileprivate func RequestButton(_ item: SettingItem) -> some View {
+    private func RequestButton(_ item: SettingItem) -> some View {
         let text = item == .request ? "로그인에 문제가 있어요" : item.title
         //
         HStack(alignment: .center, spacing: ViewValues.Padding.medium) {

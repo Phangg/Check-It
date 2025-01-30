@@ -58,7 +58,7 @@ struct TimePicker: View {
     }
     
     @ViewBuilder
-    fileprivate func TimePickerHeader() -> some View {
+    private func TimePickerHeader() -> some View {
         HStack(alignment: .center) {
             //
             Text("알람 설정")
@@ -81,7 +81,7 @@ struct TimePicker: View {
     }
     
     @ViewBuilder
-    fileprivate func TimePickerContent() -> some View {
+    private func TimePickerContent() -> some View {
         DatePicker(
             "알림 시간 설정",
             selection: $temporaryTime,

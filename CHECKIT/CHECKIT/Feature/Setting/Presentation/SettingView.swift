@@ -141,7 +141,7 @@ struct SettingView: View {
     }
     
     @ToolbarContentBuilder
-    fileprivate func SettingViewToolbarContent() -> some ToolbarContent {
+    private func SettingViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text(AppLocalized.SettingSheetTitle)
                 .font(.system(size: 18)) // TODO: font 수정 예정
@@ -158,7 +158,7 @@ struct SettingView: View {
         }
     }
     
-    fileprivate func handleTapAction(_ item: SettingItem) {
+    private func handleTapAction(_ item: SettingItem) {
         switch item {
         case .notification:
             break
@@ -188,7 +188,7 @@ struct SettingView: View {
     }
     
     @MainActor
-    fileprivate func generateSchemePreviews(currentScheme: UIUserInterfaceStyle) {
+    private func generateSchemePreviews(currentScheme: UIUserInterfaceStyle) {
         Task {
             if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow,
                schemePreviews.isEmpty {
@@ -227,7 +227,7 @@ struct SettingView: View {
         }
     }
     
-    fileprivate func showOverlayImageView(_ image: UIImage?) {
+    private func showOverlayImageView(_ image: UIImage?) {
         removeOverlayImageView()
         //
         if let image = image {
@@ -237,13 +237,13 @@ struct SettingView: View {
         }
     }
     
-    fileprivate func removeOverlayImageView() {
+    private func removeOverlayImageView() {
         overlayWindow?.rootViewController?.view.subviews.forEach {
             $0.removeFromSuperview()
         }
     }
     
-    fileprivate func prepareOverlayWindow() {
+    private func prepareOverlayWindow() {
         if let scene = (UIApplication.shared.connectedScenes.first as? UIWindowScene),
            overlayWindow == nil {
             let window = UIWindow(windowScene: scene)

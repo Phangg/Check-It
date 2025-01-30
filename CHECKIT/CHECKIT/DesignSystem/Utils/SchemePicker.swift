@@ -66,7 +66,7 @@ struct SchemePicker: View {
     }
     
     @ViewBuilder
-    fileprivate func SchemeCardView(
+    private func SchemeCardView(
         previews: [SchemePreview],
         schemeType: AppScheme
     ) -> some View {

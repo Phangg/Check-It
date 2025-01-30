@@ -133,7 +133,7 @@ struct GoalListCell: View {
     }
     
     @ViewBuilder
-    fileprivate func SwipeActionView() -> some View {
+    private func SwipeActionView() -> some View {
         HStack(alignment: .center, spacing: ViewValues.Padding.default) {
             // Edit
             SwipeActionButton(

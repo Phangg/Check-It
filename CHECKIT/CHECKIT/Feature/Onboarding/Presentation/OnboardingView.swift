@@ -53,7 +53,7 @@ struct OnboardingView: View {
     }
     
     @ViewBuilder
-    fileprivate func OnboardingTopToobar() -> some View {
+    private func OnboardingTopToobar() -> some View {
         HStack(alignment: .center) {
             // OnboardingPage 인디케이터
             LoadingIndicator(

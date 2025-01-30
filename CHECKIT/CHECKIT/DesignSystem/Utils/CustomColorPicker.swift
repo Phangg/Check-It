@@ -91,7 +91,7 @@ struct CustomColorPicker: View {
     }
     
     @ViewBuilder
-    fileprivate func CustomColorHeader() -> some View {
+    private func CustomColorHeader() -> some View {
         HStack(alignment: .center) {
             //
             Text("앱 메인 색상 설정")
