@@ -12,6 +12,10 @@ struct MainView: View {
     @State private var sampleGoalData: [Goal] = SampleData.goals
     @State private var showAddGoalSheet: Bool = false
     @State private var showSettingSheet: Bool = false
+    //
+    @State private var showEditGoalSheet: Bool = false
+    @State private var showDeleteGoalAlert: Bool = false
+    @State private var selectedGoal: Goal? = nil
     
     private let calendarRows = Array(
         repeating: GridItem(.flexible(), spacing: ViewValues.Padding.small),
@@ -40,9 +44,9 @@ struct MainView: View {
             .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { MainViewToolbarContent() }
-            // AddGoal Sheet
+            // Add Goal Sheet
             .sheet(isPresented: $showAddGoalSheet) {
-                AddGoalView()
+                GoalEditorView(.add)
                     .interactiveDismissDisabled()
             }
             // Setting Sheet
@@ -50,11 +54,44 @@ struct MainView: View {
                 SettingView()
                     .interactiveDismissDisabled()
             }
+            // Edit Goal Sheet
+            .sheet(
+                isPresented: .init(
+                    get: { selectedGoal != nil && showEditGoalSheet },
+                    set: { showEditGoalSheet = $0 }
+                ),
+                onDismiss: {
+                    selectedGoal = nil
+                },
+                content: {
+                    GoalEditorView(.edit(goal: selectedGoal!))
+                        .interactiveDismissDisabled()
+                }
+            )
+            // Goal Delete Alert
+            .alert(
+                isPresented: .init(
+                    get: { selectedGoal != nil && showDeleteGoalAlert },
+                    set: { showDeleteGoalAlert = $0 }
+                )
+            ) {
+                Alert(
+                    title: Text("목표 삭제하기"),
+                    message: Text("달력에 있는 기록은 사라지지 않아요"),
+                    primaryButton: .cancel(Text("취소")) {
+                        selectedGoal = nil
+                    },
+                    secondaryButton: .destructive(Text("삭제")) {
+                        // TODO: Goal 삭제
+                        print("DELETE: \(selectedGoal?.title ?? "???")")
+                    }
+                )
+            }
         }
     }
     
     @ToolbarContentBuilder
-    fileprivate func MainViewToolbarContent() -> some ToolbarContent {
+    private func MainViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text(DateFormat.dateToYearDotMonthDotDay(Date()))
                 .font(.system(size: 18)) // TODO: font 수정 예정
@@ -72,7 +109,7 @@ struct MainView: View {
     }
     
     @ViewBuilder
-    fileprivate func GoalCalendar() -> some View {
+    private func GoalCalendar() -> some View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal) {
                 LazyHGrid(
@@ -127,7 +164,7 @@ struct MainView: View {
     }
     
     @ViewBuilder
-    fileprivate func GoalList() -> some View {
+    private func GoalList() -> some View {
         CustomHorizontalScrollView {
             LazyVStack(alignment: .center, spacing: ViewValues.Padding.default) {
                 ForEach($sampleGoalData) { $goal in
@@ -144,11 +181,11 @@ struct MainView: View {
                             goal.streakCount -= 1
                         }
                     } editAction: {
-                        // TODO:
-                        print("EDIT")
+                        selectedGoal = goal
+                        showEditGoalSheet = true
                     } deleteAction: {
-                        // TODO:
-                        print("DELETE")
+                        selectedGoal = goal
+                        showDeleteGoalAlert = true
                     }
                     .padding(.horizontal, ViewValues.Padding.default)
                 }
@@ -157,7 +194,7 @@ struct MainView: View {
     }
     
     // 해당 날짜에 대한 여러 조건을 확인 후, Month 를 반환하는 메서드
-    fileprivate func getDisplayMonth(
+    private func getDisplayMonth(
         for date: Date,
         usersAppStartDate: Date
     ) -> Month? {
@@ -189,7 +226,7 @@ struct MainView: View {
         return nil
     }
     
-    fileprivate func getDisplayMonth(
+    private func getDisplayMonth(
         showMonth: Bool,
         startDayIndex: Int,
         usersAppStartDate: Date

@@ -1,17 +1,29 @@
 //
-//  AddGoalSectionView.swift
+//  GoalSection.swift
 //  CHECKIT
 //
-//  Created by phang on 1/19/25.
+//  Created by phang on 1/30/25.
 //
 
 import SwiftUI
 
-struct AddGoalSectionView<Content: View>: View {
-    let title: String
-    let isRequired: Bool
-    let description: String?
-    let content: () -> Content
+struct GoalSection<Content: View>: View {
+    private let title: String
+    private let isRequired: Bool
+    private let description: String?
+    private let content: () -> Content
+    
+    init(
+        title: String,
+        isRequired: Bool,
+        description: String? = nil,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.title = title
+        self.isRequired = isRequired
+        self.description = description
+        self.content = content
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: ViewValues.Padding.medium) {
