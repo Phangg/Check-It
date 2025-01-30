@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GoalListCell: View {
+    @EnvironmentObject private var swipedCellManager: SwipedCellManager
     @EnvironmentObject private var appMainColorManager: AppMainColorManager
     // For managing button animation
     @State private var isPressed = false
@@ -103,15 +104,21 @@ struct GoalListCell: View {
         .id(cellID)
         .disabled(dragOffset != .zero || currentPosition.width != 0) // 스와이프 중 버튼 비활성화
         .buttonStyle(PressButtonStyle(isPressed: $isPressed))
-        .hapticOnTap(type: .impact(feedbackStyle: .light), isActive: currentPosition.width == 0)
+        .hapticOnTap(
+            type: .impact(feedbackStyle: .light),
+            isActive: currentPosition.width == 0
+        )
         // 드래그해서 수정 및 삭제 버튼 보기
         .offset(x: dragOffset.width + currentPosition.width)
-        .animation(.linear(duration: ViewValues.Duration.short), value: dragOffset)
+        .animation(.linear(duration: ViewValues.Duration.short), value: [dragOffset, currentPosition])
         .simultaneousGesture(
             DragGesture(minimumDistance: 20)
                 .onChanged { value in
                     // 왼쪽으로 드래그할 때만 || 열려있는 상태에서만
                     if value.translation.width <= 0 || currentPosition.width < 0 {
+                        if swipedCellManager.currentlySwipedCellID != cellID {
+                            swipedCellManager.setCellSwiped(cellID)
+                        }
                         dragOffset = value.translation
                         targetPosition.width = dragOffset.width + currentPosition.width
                     }
@@ -130,6 +137,12 @@ struct GoalListCell: View {
         .background(alignment: .trailing) {
             SwipeActionView()
         }
+        .onChange(of: swipedCellManager.currentlySwipedCellID) { _, newID in
+            if newID != cellID {
+                currentPosition = .zero
+                targetPosition = .zero
+            }
+        }
     }
     
     @ViewBuilder
@@ -141,7 +154,12 @@ struct GoalListCell: View {
                 iconName: "square.and.pencil",
                 position: targetPosition
             ) {
-                editAction()
+                withAnimation(.linear(duration: ViewValues.Duration.short)) {
+                    currentPosition = .zero
+                    targetPosition = .zero
+                } completion: {
+                    editAction()
+                }
             }
             // Delete
             SwipeActionButton(
@@ -149,7 +167,12 @@ struct GoalListCell: View {
                 iconName: "trash",
                 position: targetPosition
             ) {
-                deleteAction()
+                withAnimation(.linear(duration: ViewValues.Duration.short)) {
+                    currentPosition = .zero
+                    targetPosition = .zero
+                } completion: {
+                    deleteAction()
+                }
             }
         }
         .padding(.horizontal, ViewValues.Padding.medium)

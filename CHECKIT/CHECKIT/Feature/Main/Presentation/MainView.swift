@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject private var swipedCellManager = SwipedCellManager()
+    //
     @State private var sampleCalendarData: [DayData] = SampleData.days
     @State private var sampleGoalData: [Goal] = SampleData.goals
     @State private var showAddGoalSheet: Bool = false
@@ -76,7 +78,7 @@ struct MainView: View {
                 )
             ) {
                 Alert(
-                    title: Text("목표 삭제하기"),
+                    title: Text("'\(selectedGoal!.title)' 삭제"),
                     message: Text("달력에 있는 기록은 사라지지 않아요"),
                     primaryButton: .cancel(Text("취소")) {
                         selectedGoal = nil
@@ -188,6 +190,7 @@ struct MainView: View {
                         showDeleteGoalAlert = true
                     }
                     .padding(.horizontal, ViewValues.Padding.default)
+                    .environmentObject(swipedCellManager)
                 }
             }
         }
