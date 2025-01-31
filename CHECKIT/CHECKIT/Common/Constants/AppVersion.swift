@@ -15,7 +15,7 @@ struct AppVersion {
         else {
             return "-"
         }
-        return String(appVersion.reversed())
+        return appVersion
     }()
     
     // 빌드 버전
