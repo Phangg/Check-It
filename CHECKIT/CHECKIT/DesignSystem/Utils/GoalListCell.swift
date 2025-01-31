@@ -106,7 +106,7 @@ struct GoalListCell: View {
         .buttonStyle(PressButtonStyle(isPressed: $isPressed))
         .hapticOnTap(
             type: .impact(feedbackStyle: .light),
-            isActive: currentPosition.width == 0
+            isActive: currentPosition.width == 0 && swipedCellManager.currentlySwipedCellID == nil
         )
         // 드래그해서 수정 및 삭제 버튼 보기
         .offset(x: dragOffset.width + currentPosition.width)

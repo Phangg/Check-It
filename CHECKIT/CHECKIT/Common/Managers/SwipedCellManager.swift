@@ -13,4 +13,8 @@ final class SwipedCellManager: ObservableObject {
     func setCellSwiped(_ id: UUID?) {
         currentlySwipedCellID = id
     }
+    
+    func resetSwipedCell() {
+        currentlySwipedCellID = nil
+    }
 }
