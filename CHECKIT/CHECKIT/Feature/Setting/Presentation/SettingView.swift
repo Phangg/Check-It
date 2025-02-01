@@ -13,15 +13,22 @@ struct SettingView: View {
     //
     @EnvironmentObject private var appMainColorManager: AppMainColorManager
     //
-    @State private var isOnNotification: Bool = false
-    @State private var showSchemePicker: Bool = false
-    @State private var schemePreviews: [SchemePreview] = []
-    @State private var overlayWindow: UIWindow? = nil
-    @State private var showColorPicker: Bool = false
-    @State private var selectedWebViewURL: URL? = nil
-    @State private var showWebViewSheet: Bool = false
-    @State private var errorMessage: String = ""
-    @State private var showErrorAlert: Bool = false
+    @StateObject private var container: MVIContainer<SettingIntent, SettingModelState>
+    private var intent: SettingIntent { container.intent }
+    private var state: SettingModelState { container.model }
+    
+    init() {
+        let model = SettingModelImp()
+        let intent = SettingIntentImp(
+            model: model
+        )
+        let container = MVIContainer(
+            intent: intent as SettingIntent,
+            model: model as SettingModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
     
     var body: some View {
         NavigationStack {
@@ -44,7 +51,10 @@ struct SettingView: View {
                             switch item {
                             case .notification:
                                 SettingListItemCell(
-                                    isOnNotification: $isOnNotification,
+                                    isOnNotification: Binding(
+                                        get: { state.isOnNotification },
+                                        set: { intent.update(isOnNotification: $0) }
+                                    ),
                                     item: item
                                 )
                             case .appVersion:
@@ -54,7 +64,7 @@ struct SettingView: View {
                                 )
                             default:
                                 Button {
-                                    handleTapAction(item)
+                                    self.handleTapAction(item)
                                 } label: {
                                     SettingListItemCell(
                                         isOnNotification: nil,
@@ -86,55 +96,80 @@ struct SettingView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { SettingViewToolbarContent() }
             .onAppear {
-                // 앱 스키마 스크린샷을 위한 준비
-                prepareOverlayWindow()
+                intent.handleOnAppear()
             }
             // 앱 색상 변경 - ColorPicker 시트
             .sheet(
-                isPresented: $showColorPicker,
+                isPresented: Binding(
+                    get: { state.showColorPicker},
+                    set: { intent.update(showColorPicker: $0) }
+                ),
                 content: {
                     CustomColorPicker(
                         appMainColor: appMainColorManager.appMainColor,
-                        showColorPicker: $showColorPicker
+                        showColorPicker: Binding(
+                            get: { state.showColorPicker},
+                            set: { intent.update(showColorPicker: $0) }
+                        )
                     )
                 }
             )
             // 디스플레이 변경 - SchemePicker 시트
             .sheet(
-                isPresented: $showSchemePicker,
+                isPresented: Binding(
+                    get: { state.showSchemePicker},
+                    set: { intent.update(showSchemePicker: $0) }
+                ),
                 onDismiss: {
-                    schemePreviews = []
+                    intent.update(schemePreviews: [])
                 },
                 content: {
-                    SchemePicker(previews: $schemePreviews)
+                    SchemePicker(
+                        previews: Binding(
+                            get: { state.schemePreviews},
+                            set: { intent.update(schemePreviews: $0) }
+                        )
+                    )
                 }
             )
             // 개인정보 처리 방침 & 이용 약관 - WebView 시트
             .sheet(
-                isPresented: .init(
-                    get: { showWebViewSheet && selectedWebViewURL != nil },
-                    set: { showWebViewSheet = $0 }
+                isPresented: Binding(
+                    get: { state.showWebViewSheet && state.selectedWebViewURL != nil },
+                    set: { intent.update(showWebViewSheet: $0) }
                 ),
                 onDismiss: {
-                    selectedWebViewURL = nil
-                    if !errorMessage.isEmpty {
-                        showErrorAlert = true
+                    // TODO: -
+                    intent.update(selectedWebViewURL: nil)
+                    if !state.errorMessage.isEmpty {
+                        intent.update(showErrorAlert: true)
                     }
                 },
                 content: {
                     WebView(
-                        url: selectedWebViewURL!, // openWebView() 에서 검증
-                        errorMessage: $errorMessage,
-                        showWebViewSheet: $showWebViewSheet
+                        url: state.selectedWebViewURL!, // openWebView() 에서 검증
+                        errorMessage: Binding(
+                            get: { state.errorMessage },
+                            set: { intent.update(errorMessage: $0) }
+                        ),
+                        showWebViewSheet: Binding(
+                            get: { state.showWebViewSheet },
+                            set: { intent.update(showWebViewSheet: $0) }
+                        )
                     )
                 }
             )
             // 에러 alert
-            .alert(isPresented: $showErrorAlert) {
+            .alert(
+                isPresented: Binding(
+                    get: { state.showErrorAlert },
+                    set: { intent.update(showErrorAlert: $0) }
+                )
+            ) {
                 Alert(
                     title: Text("페이지 로드 오류"),
-                    message: Text(errorMessage),
-                    dismissButton: .default(Text("확인")) { errorMessage = "" }
+                    message: Text(state.errorMessage),
+                    dismissButton: .default(Text("확인")) { intent.update(errorMessage: "") }
                 )
             }
         }
@@ -163,21 +198,17 @@ struct SettingView: View {
         case .notification:
             break
         case .appMainColor:
-            showColorPicker = true
+            intent.update(showColorPicker: true)
         case .displayMode:
-            generateSchemePreviews(currentScheme: ThemeManager.currentSystemInterfaceStyle)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                showSchemePicker = true
-            }
+            intent.handleTapDisplayMode()
+            
         case .privacyPolicy, .termsAndConditions:
-            openWebView(url: item.url)
+            intent.validateAndPresentWebView(url: item.url)
         case .appEvaluation:
-            if let url = item.url {
-                openURL(url)
-            }
+            intent.validateURLOrShowAlert(url: item.url).map { openURL($0) } // @Environment(\.openURL)
         case .request:
-            let supportEmail = SupportEmail(toAddress: "a@a.com") // TODO: 이메일 주소 config 에 저장 및 수정 예정
-            supportEmail.send(openURL: openURL)
+            // TODO: 이메일 주소 config 에 저장 및 수정 예정
+            SupportEmail(toAddress: "a@a.com").send(openURL: openURL) // @Environment(\.openURL)
         case .logout:
             print("logout") // TODO: 수정 예정
         case .cancelAccount:
@@ -185,85 +216,5 @@ struct SettingView: View {
         case .appVersion:
             break
         }
-    }
-    
-    @MainActor
-    private func generateSchemePreviews(currentScheme: UIUserInterfaceStyle) {
-        Task {
-            if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow,
-               schemePreviews.isEmpty {
-                let size = window.screen.bounds.size
-                let defaultStyle = window.overrideUserInterfaceStyle
-                // 현재 스키마 이미지
-                let defautSchemePreview = window.image(size)
-                schemePreviews.append(
-                    .init(
-                        image: defautSchemePreview,
-                        text: currentScheme == .dark ? AppScheme.dark.rawValue : AppScheme.light.rawValue
-                    )
-                )
-                // overlayWindow 에 이미지 표시
-                showOverlayImageView(defautSchemePreview)
-                // 반대 스키마로 변경
-                window.overrideUserInterfaceStyle = currentScheme.oppsiteInterfaceStyle
-                // 반대 스키마 이미지
-                let otherSchemePreviewImage = window.image(size)
-                schemePreviews.append(
-                    .init(
-                        image: otherSchemePreviewImage,
-                        text: currentScheme == .dark ? AppScheme.light.rawValue : AppScheme.dark.rawValue
-                    )
-                )
-                // 다크모드의 경우 순서 바꾸기
-                if currentScheme == .dark {
-                    schemePreviews = schemePreviews.reversed()
-                }
-                // 스키마 복구
-                window.overrideUserInterfaceStyle = defaultStyle
-                try? await Task.sleep(for: .seconds(0))
-                // overlayWindow 에 이미지 제거
-                removeOverlayImageView()
-            }
-        }
-    }
-    
-    private func showOverlayImageView(_ image: UIImage?) {
-        removeOverlayImageView()
-        //
-        if let image = image {
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFit
-            overlayWindow?.rootViewController?.view.addSubview(imageView)
-        }
-    }
-    
-    private func removeOverlayImageView() {
-        overlayWindow?.rootViewController?.view.subviews.forEach {
-            $0.removeFromSuperview()
-        }
-    }
-    
-    private func prepareOverlayWindow() {
-        if let scene = (UIApplication.shared.connectedScenes.first as? UIWindowScene),
-           overlayWindow == nil {
-            let window = UIWindow(windowScene: scene)
-            window.backgroundColor = .clear
-            window.isHidden = false
-            window.isUserInteractionEnabled = false
-            let emptyController = UIViewController()
-            emptyController.view.backgroundColor = .clear
-            window.rootViewController = emptyController
-            overlayWindow = window
-        }
-    }
-    
-    private func openWebView(url: URL?) {
-        guard let url = url, url.isValid() else {
-            errorMessage = "잘못된 URL 입니다."
-            showErrorAlert = true
-            return
-        }
-        selectedWebViewURL = url
-        showWebViewSheet = true
     }
 }
