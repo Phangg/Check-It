@@ -211,14 +211,6 @@ struct MainView: View {
                 }
             }
         }
-        // Goal Cell 스와이프 열린 상태에서 탭 동작 시, cell 닫기 (tap 영역 버튼 동작 'X')
-        .highPriorityGesture(
-            TapGesture()
-                .onEnded {
-                    swipedCellManager.resetSwipedCell()
-                }
-                .whenCondition(swipedCellManager.currentlySwipedCellID != nil)
-        )
     }
     
     // 해당 날짜에 대한 여러 조건을 확인 후, Month 를 반환하는 메서드

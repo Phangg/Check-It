@@ -102,11 +102,11 @@ struct GoalListCell: View {
             }
         }
         .id(cellID)
-        .disabled(dragOffset != .zero || currentPosition.width != 0) // 스와이프 중 버튼 비활성화
+        .disabled(swipedCellManager.currentlySwipedCellID != nil) // 스와이프 중 버튼 비활성화
         .buttonStyle(PressButtonStyle(isPressed: $isPressed))
         .hapticOnTap(
             type: .impact(feedbackStyle: .light),
-            isActive: currentPosition.width == 0 && swipedCellManager.currentlySwipedCellID == nil
+            isActive: swipedCellManager.currentlySwipedCellID == nil
         )
         // 드래그해서 수정 및 삭제 버튼 보기
         .offset(x: dragOffset.width + currentPosition.width)
