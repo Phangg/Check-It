@@ -10,7 +10,7 @@ import SwiftUI
 struct OnboardingView: View {
     @EnvironmentObject private var appMainColorManager: AppMainColorManager
     //
-    @StateObject var container: MVIContainer<OnboardingIntent, OnboardingModelState>
+    @StateObject private var container: MVIContainer<OnboardingIntent, OnboardingModelState>
     private var intent: OnboardingIntent { container.intent }
     private var state: OnboardingModelState { container.model }
         
