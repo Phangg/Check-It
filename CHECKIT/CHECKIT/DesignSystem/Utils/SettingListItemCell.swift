@@ -15,10 +15,17 @@ struct SettingListItemCell: View {
     private let item: SettingItem
     
     init(
-        isOnNotification: Binding<Bool>? = nil,
+        isOnNotification: Binding<Bool>,
         item: SettingItem
     ) {
-        self._isOnNotification = if let isOnNotification { isOnNotification } else { .constant(false) }
+        self._isOnNotification = isOnNotification
+        self.item = item
+    }
+    
+    init(
+        item: SettingItem
+    ) {
+        self._isOnNotification = .constant(false)
         self.item = item
     }
     
@@ -82,10 +89,15 @@ struct SettingListItemCell: View {
                 Section {
                     //
                     ForEach(section.items, id: \.self) { item in
-                        SettingListItemCell(
-                            isOnNotification: item == .notification ? .constant(true) : nil,
-                            item: item
-                        )
+                        switch item {
+                        case .notification:
+                            SettingListItemCell(
+                                isOnNotification: .constant(true),
+                                item: item
+                            )
+                        default:
+                            SettingListItemCell(item: item)
+                        }
                     }
                 } header: {
                     Text(section.rawValue) // TODO: 폰트 설정 필요

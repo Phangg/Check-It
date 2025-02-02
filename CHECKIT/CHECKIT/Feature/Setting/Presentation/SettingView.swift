@@ -58,18 +58,12 @@ struct SettingView: View {
                                     item: item
                                 )
                             case .appVersion:
-                                SettingListItemCell(
-                                    isOnNotification: nil,
-                                    item: item
-                                )
+                                SettingListItemCell(item: item)
                             default:
                                 Button {
                                     self.handleTapAction(item)
                                 } label: {
-                                    SettingListItemCell(
-                                        isOnNotification: nil,
-                                        item: item
-                                    )
+                                    SettingListItemCell(item: item)
                                 }
                                 .buttonStyle(.plain)
                             }
