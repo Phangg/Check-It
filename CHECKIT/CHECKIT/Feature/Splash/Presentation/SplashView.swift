@@ -10,13 +10,24 @@ import SwiftUI
 struct SplashView: View {
     @EnvironmentObject private var appMainColorManager: AppMainColorManager
     //
-    @State private var animationActive: Bool = false
-    @Binding private var isFetched: Bool
-    
+    @StateObject private var container: MVIContainer<SplashIntent, SplashModelState>
+    private var intent: SplashIntent { container.intent }
+    private var state: SplashModelState { container.model }
+        
     init(
-        isFetched: Binding<Bool>
+        onFetchComplete: @escaping () -> Void
     ) {
-        self._isFetched = isFetched
+        let model = SplashModelImp()
+        let intent = SplashIntentImp(
+            model: model,
+            onFetchComplete: onFetchComplete
+        )
+        let container = MVIContainer(
+            intent: intent as SplashIntent,
+            model: model as SplashModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
     }
     
     var body: some View {
@@ -26,14 +37,14 @@ struct SplashView: View {
                 ZStack(alignment: .center) {
                     // BG
                     RoundedRectangle(cornerRadius: ViewValues.Radius.default)
-                        .fill(animationActive ? appMainColorManager.appMainColor.mainColor : .cellLevel1)
+                        .fill(state.animationActive ? appMainColorManager.appMainColor.mainColor : .cellLevel1)
                         .frame(
                             width: ViewValues.Size.cellBoxLarge,
                             height: ViewValues.Size.cellBoxLarge
                         )
                         .animation(
                             .easeInOut(duration: ViewValues.Duration.long),
-                            value: animationActive
+                            value: state.animationActive
                         )
                     // Label
                     Image(systemName: "checkmark")
@@ -41,34 +52,27 @@ struct SplashView: View {
                         .aspectRatio(1, contentMode: .fit)
                         .fontWeight(.heavy)
                         .frame(width: 60)
-                        .foregroundStyle(animationActive ? .budWhite : .clear)
+                        .foregroundStyle(state.animationActive ? .budWhite : .clear)
                         .animation(
                             .easeInOut(duration: ViewValues.Duration.long),
-                            value: animationActive
+                            value: state.animationActive
                         )
                 }
                 // AppName
                 Text(AppLocalized.AppName)
                     .font(.system(size: 60)) // TODO: font 수정 예정
                     .fontWeight(.heavy)
-                    .foregroundStyle(animationActive ? .midGray : .budBlack)
+                    .foregroundStyle(state.animationActive ? .midGray : .budBlack)
                     .animatedStrikethrough(
-                        isActive: animationActive,
+                        isActive: state.animationActive,
                         color: .midGray,
                         height: 8,
                         duration: ViewValues.Duration.long - ViewValues.Duration.regular
                     )
             }
         }
-        .onAppear { // TODO: 수정 예정
-            Timer.scheduledTimer(withTimeInterval: ViewValues.Duration.medium, repeats: false) { _ in
-                animationActive = true
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + ViewValues.Duration.long + ViewValues.Duration.medium
-                ) {
-                    isFetched = true
-                }
-            }
+        .onAppear {
+            intent.handleOnAppear()
         }
     }
 }
