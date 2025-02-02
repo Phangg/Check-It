@@ -12,10 +12,24 @@ struct Loginview: View {
     @Environment(\.openURL) private var openURL
     //
     @EnvironmentObject private var appMainColorManager: AppMainColorManager
+    @EnvironmentObject private var themeManager: ThemeManager
     //
-    @State private var showWebViewSheet: Bool = false
-    @State private var errorMessage: String = ""
-    @State private var showErrorAlert: Bool = false
+    @StateObject private var container: MVIContainer<LoginIntent, LoginModelState>
+    private var intent: LoginIntent { container.intent }
+    private var state: LoginModelState { container.model }
+    
+    init() {
+        let model = LoginModelImp()
+        let intent = LoginIntentImp(
+            model: model
+        )
+        let container = MVIContainer(
+            intent: intent as LoginIntent,
+            model: model as LoginModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: ViewValues.Padding.huge) {
@@ -30,7 +44,11 @@ struct Loginview: View {
                         onRequest: { _ in },
                         onCompletion: { _ in }
                     )
-                    .signInWithAppleButtonStyle(.black) // TODO: 디스플레이모드에 따라 수정 필요
+                    .signInWithAppleButtonStyle(
+                        themeManager.currentScheme == .light ?
+                            .black : themeManager.currentScheme == .dark ?
+                            .white: ThemeManager.currentSystemInterfaceStyle == .light ? .black : .white
+                    )
                     .frame(width: ViewValues.Size.loginButtonWidth,
                            height: ViewValues.Size.loginButtonHeight)
                     .clipShape(.rect(cornerRadius: ViewValues.Radius.medium))
@@ -49,26 +67,38 @@ struct Loginview: View {
         .padding(ViewValues.Padding.default)
         // 개인정보 처리 방침 - WebView 시트
         .sheet(
-            isPresented: $showWebViewSheet,
+            isPresented: Binding(
+                get: { state.showWebViewSheet },
+                set: { intent.update(showWebViewSheet: $0) }
+            ),
             onDismiss: {
-                if !errorMessage.isEmpty {
-                    showErrorAlert = true
-                }
+                intent.dismissWebView(isErrorMessageEmpty: state.errorMessage.isEmpty)
             },
             content: {
                 WebView(
                     url: SettingItem.privacyPolicy.url!, // openPrivacyPolicyWebView() 에서 검증
-                    errorMessage: $errorMessage,
-                    showWebViewSheet: $showWebViewSheet
+                    errorMessage: Binding(
+                        get: { state.errorMessage },
+                        set: { intent.update(errorMessage: $0) }
+                    ),
+                    showWebViewSheet: Binding(
+                        get: { state.showWebViewSheet },
+                        set: { intent.update(showWebViewSheet: $0) }
+                    )
                 )
             }
         )
         // WebView 에러 alert
-        .alert(isPresented: $showErrorAlert) {
+        .alert(
+            isPresented: Binding(
+                get: { state.showErrorAlert },
+                set: { intent.update(showErrorAlert: $0) }
+            )
+        ) {
             Alert(
                 title: Text("개인정보 처리 방침 페이지 로드 오류"),
-                message: Text(errorMessage),
-                dismissButton: .default(Text("확인")) { errorMessage = "" }
+                message: Text(state.errorMessage),
+                dismissButton: .default(Text("확인")) { intent.update(errorMessage: "") }
             )
         }
     }
@@ -85,7 +115,7 @@ struct Loginview: View {
             )
             //
             Button {
-                handleTapAction(item)
+                self.handleTapAction(item)
             } label: {
                 Text(text)
                     .font(.system(size: 13)) // TODO: font 수정 필요
@@ -100,25 +130,12 @@ struct Loginview: View {
     private func handleTapAction(_ item: SettingItem) {
         switch item {
         case .privacyPolicy:
-            openPrivacyPolicyWebView(url: item.url)
+            intent.openPrivacyPolicyWebView(url: item.url)
         case .request:
-            openEmailApp()
+            // TODO: 이메일 주소 config 에 저장 및 수정 예정
+            SupportEmail(toAddress: "a@a.com").send(openURL: openURL) // @Environment(\.openURL)
         default:
             break
         }
-    }
-    
-    private func openPrivacyPolicyWebView(url: URL?) {
-        guard let url = url, url.isValid() else {
-            errorMessage = "잘못된 URL 입니다."
-            showErrorAlert = true
-            return
-        }
-        showWebViewSheet = true
-    }
-    
-    private func openEmailApp() {
-        let supportEmail = SupportEmail(toAddress: "a@a.com") // TODO: 이메일 주소 config 에 저장 및 수정 예정
-        supportEmail.send(openURL: openURL)
     }
 }
