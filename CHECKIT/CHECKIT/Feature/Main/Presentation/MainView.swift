@@ -10,19 +10,22 @@ import SwiftUI
 struct MainView: View {
     @StateObject private var swipedCellManager = SwipedCellManager()
     //
-    @State private var sampleCalendarData: [DayData] = SampleData.days
-    @State private var sampleGoalData: [Goal] = SampleData.goals
-    @State private var showAddGoalSheet: Bool = false
-    @State private var showSettingSheet: Bool = false
-    //
-    @State private var showEditGoalSheet: Bool = false
-    @State private var showDeleteGoalAlert: Bool = false
-    @State private var selectedGoal: Goal? = nil
+    @StateObject private var container: MVIContainer<MainIntent, MainModelState>
+    private var intent: MainIntent { container.intent }
+    private var state: MainModelState { container.model }
     
-    private let calendarRows = Array(
-        repeating: GridItem(.flexible(), spacing: ViewValues.Padding.small),
-        count: 7 + 1
-    )
+    init() {
+        let model = MainModelImp()
+        let intent = MainIntentImp(
+            model: model
+        )
+        let container = MVIContainer(
+            intent: intent as MainIntent,
+            model: model as MainModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
     
     var body: some View {
         NavigationStack { // TODO: 스택 위치 이동 예정
@@ -35,7 +38,7 @@ struct MainView: View {
                     CustomDivider()
                     // Add Button
                     AddGoalButton {
-                        showAddGoalSheet = true
+                        intent.openGoalEditor(type: .add)
                     }
                 }
                 .padding(.horizontal, ViewValues.Padding.default)
@@ -48,45 +51,55 @@ struct MainView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { MainViewToolbarContent() }
             // Add Goal Sheet
-            .sheet(isPresented: $showAddGoalSheet) {
+            .sheet(
+                isPresented: Binding(
+                    get: { state.showAddGoalSheet },
+                    set: { intent.update(showAddGoalSheet: $0) }
+                )
+            ) {
                 GoalEditorView(.add)
                     .interactiveDismissDisabled()
             }
             // Setting Sheet
-            .sheet(isPresented: $showSettingSheet) {
+            .sheet(
+                isPresented: Binding(
+                    get: { state.showSettingSheet },
+                    set: { intent.update(showSettingSheet: $0) }
+                )
+            ) {
                 SettingView()
                     .interactiveDismissDisabled()
             }
             // Edit Goal Sheet
             .sheet(
                 isPresented: .init(
-                    get: { selectedGoal != nil && showEditGoalSheet },
-                    set: { showEditGoalSheet = $0 }
+                    get: { state.selectedGoal != nil && state.showEditGoalSheet },
+                    set: { intent.update(showEditGoalSheet: $0) }
                 ),
                 onDismiss: {
-                    selectedGoal = nil
+                    intent.resetSelectedGoal()
                 },
                 content: {
-                    GoalEditorView(.edit(goal: selectedGoal!))
+                    GoalEditorView(.edit(goal: state.selectedGoal!))
                         .interactiveDismissDisabled()
                 }
             )
             // Goal Delete Alert
             .alert(
                 isPresented: .init(
-                    get: { selectedGoal != nil && showDeleteGoalAlert },
-                    set: { showDeleteGoalAlert = $0 }
+                    get: { state.selectedGoal != nil && state.showDeleteGoalAlert },
+                    set: { intent.update(showDeleteGoalAlert: $0) }
                 )
             ) {
                 Alert(
-                    title: Text("'\(selectedGoal!.title)' 삭제"),
+                    title: Text("'\(state.selectedGoal!.title)' 삭제"),
                     message: Text("달력에 있는 기록은 사라지지 않아요"),
                     primaryButton: .cancel(Text("취소")) {
-                        selectedGoal = nil
+                        intent.resetSelectedGoal()
                     },
                     secondaryButton: .destructive(Text("삭제")) {
                         // TODO: Goal 삭제
-                        print("DELETE: \(selectedGoal?.title ?? "???")")
+                        print("DELETE: \(state.selectedGoal?.title ?? "???")")
                     }
                 )
             }
@@ -119,7 +132,7 @@ struct MainView: View {
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                showSettingSheet = true
+                intent.openSettingSheet()
             } label: {
                 Image(systemName: "gearshape.fill")
             }
@@ -132,33 +145,33 @@ struct MainView: View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal) {
                 LazyHGrid(
-                    rows: calendarRows,
+                    rows: state.calendarRows,
                     alignment: .center,
                     spacing: ViewValues.Padding.small
                 ) {
                     // 시작 위치 조정
-                    let startDayIndex = Calendar.current.getDayIndexOfWeek(from: sampleCalendarData.first!.date)
+                    let startDayIndex = Calendar.current.getDayIndexOfWeek(from: state.sampleCalendarData.first!.date)
                     if startDayIndex != 1 {
                         ForEach(0..<startDayIndex, id: \.self) { index in
                             GrowCell(
-                                month: getDisplayMonth(
+                                month: intent.getDisplayMonth(
                                     showMonth: index == 0,
                                     startDayIndex: startDayIndex,
-                                    usersAppStartDate: sampleCalendarData.first!.date
+                                    usersAppStartDate: state.sampleCalendarData.first!.date
                                 ),
                                 backgroundColor: .clear
                             )
                         }
                     }
                     //
-                    ForEach(sampleCalendarData.indices, id: \.self) { index in
-                        let day = sampleCalendarData[index]
+                    ForEach(state.sampleCalendarData.indices, id: \.self) { index in
+                        let day = state.sampleCalendarData[index]
                         if Calendar.current.getWeekday(from: day.date) == .monday {
                             // 월요일은 Month 표시 or 빈 공간 추가
                             GrowCell(
-                                month: getDisplayMonth(
+                                month: intent.getDisplayMonth(
                                     for: day.date,
-                                    usersAppStartDate: sampleCalendarData.first!.date
+                                    usersAppStartDate: state.sampleCalendarData.first!.date
                                 ),
                                 backgroundColor: .clear
                             )
@@ -186,7 +199,12 @@ struct MainView: View {
     private func GoalList() -> some View {
         CustomHorizontalScrollView {
             LazyVStack(alignment: .center, spacing: ViewValues.Padding.default) {
-                ForEach($sampleGoalData) { $goal in
+                ForEach(
+                    Binding(
+                        get: { state.sampleGoalData },
+                        set: { intent.update(sampleGoalData: $0) }
+                    )
+                ) { $goal in
                     GoalListCell(
                         isCompleted: $goal.isActive,
                         goalStreakCount: $goal.streakCount,
@@ -200,66 +218,14 @@ struct MainView: View {
                             goal.streakCount -= 1
                         }
                     } editAction: {
-                        selectedGoal = goal
-                        showEditGoalSheet = true
+                        intent.openGoalEditor(type: .edit(goal: goal))
                     } deleteAction: {
-                        selectedGoal = goal
-                        showDeleteGoalAlert = true
+                        intent.handleTapDeleteButton(for: goal)
                     }
                     .padding(.horizontal, ViewValues.Padding.default)
                     .environmentObject(swipedCellManager)
                 }
             }
         }
-    }
-    
-    // 해당 날짜에 대한 여러 조건을 확인 후, Month 를 반환하는 메서드
-    private func getDisplayMonth(
-        for date: Date,
-        usersAppStartDate: Date
-    ) -> Month? {
-        let calendar = Calendar.current
-        let currentMonth = calendar.component(.month, from: date)
-        let startMonth = calendar.component(.month, from: usersAppStartDate)
-        let startDay = calendar.component(.day, from: usersAppStartDate)
-        // 앱 시작 월 특수 처리
-        if currentMonth == startMonth {
-            // 앱 시작일 처리
-            if calendar.isDate(date, inSameDayAs: usersAppStartDate) {
-                return calendar.isDateInLastWeek(date)
-                    ? calendar.getNextMonth(from: date)
-                    : Month.getMonth(for: currentMonth)
-            }
-            // 중복 표시 제거 처리
-            if startDay < 4 && !calendar.isDateInLastWeek(date) {
-                return nil
-            }
-        }
-        // 일반적인 날짜 처리
-        if calendar.isDateInFirstWeek(date) {
-            return Month.getMonth(for: currentMonth)
-        }
-        if calendar.isDateInLastWeek(date) {
-            return calendar.getNextMonth(from: date)
-        }
-        //
-        return nil
-    }
-    
-    private func getDisplayMonth(
-        showMonth: Bool,
-        startDayIndex: Int,
-        usersAppStartDate: Date
-    ) -> Month? {
-        if showMonth {
-            let calendar = Calendar.current
-            if startDayIndex <= 3,
-               calendar.isDateInLastWeek(usersAppStartDate) {
-                return calendar.getNextMonth(from: usersAppStartDate)
-            } else {
-                return calendar.getMonth(from: usersAppStartDate)
-            }
-        }
-        return nil
     }
 }
