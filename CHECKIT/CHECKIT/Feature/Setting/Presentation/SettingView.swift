@@ -195,14 +195,13 @@ struct SettingView: View {
             intent.update(showColorPicker: true)
         case .displayMode:
             intent.handleTapDisplayMode()
-            
         case .privacyPolicy, .termsAndConditions:
             intent.validateAndPresentWebView(url: item.url)
         case .appEvaluation:
             intent.validateURLOrShowAlert(url: item.url).map { openURL($0) } // @Environment(\.openURL)
         case .request:
             // TODO: 이메일 주소 config 에 저장 및 수정 예정
-            SupportEmail(toAddress: "a@a.com").send(openURL: openURL) // @Environment(\.openURL)
+            SupportEmail().send(openURL: openURL) // @Environment(\.openURL)
         case .logout:
             print("logout") // TODO: 수정 예정
         case .cancelAccount:

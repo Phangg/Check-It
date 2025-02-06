@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct SupportEmail {
-    let toAddress: String                           // 개발자 이메일 주소
-    let subject: String = "Check-It : 문의 및 요청"    // 제목
+    let toAddress: String = ServiceConfiguration.supportEmail   // 개발자 이메일 주소
+    let subject: String = "Check-It : 문의 및 요청"                // 제목
     var body: String = """
         안녕하세요,
 

@@ -133,7 +133,7 @@ struct Loginview: View {
             intent.openPrivacyPolicyWebView(url: item.url)
         case .request:
             // TODO: 이메일 주소 config 에 저장 및 수정 예정
-            SupportEmail(toAddress: "a@a.com").send(openURL: openURL) // @Environment(\.openURL)
+            SupportEmail().send(openURL: openURL) // @Environment(\.openURL)
         default:
             break
         }
