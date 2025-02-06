@@ -92,5 +92,8 @@ playground.xcworkspace
 
 ### Config
 GoogleService-Info.plist
+Debug.xcconfig
+Release.xcconfig
+**.xcconfig
 
 ### Signing
