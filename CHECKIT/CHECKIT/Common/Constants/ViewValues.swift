@@ -80,6 +80,7 @@ struct ViewValues {
     struct Opacity {
         static let light: CGFloat = 0.05
         static let soft: CGFloat = 0.1
+        static let mild: CGFloat = 0.15
         static let level2: CGFloat = 0.25
         static let level3: CGFloat = 0.5
         static let level4: CGFloat = 0.75
